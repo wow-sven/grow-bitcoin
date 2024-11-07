@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box, Container, Stack, Flex, Anchor, Image } from "@mantine/core";
+import { Box, Container, Stack, Flex, Anchor } from "@mantine/core";
 import LogoSVG from "../assets/logo.svg";
 
 import {
@@ -19,10 +19,8 @@ export default function Footer() {
           </Link>
 
           <Flex gap="xs">
-            <Anchor c="dark">
-              <Link href="https://twitter.com/RoochNetwork">
-                <IconBrandX />
-              </Link>
+            <Anchor c="dark" href="https://twitter.com/RoochNetwork">
+              <IconBrandX />
             </Anchor>
             <Anchor c="dark">
               <IconBrandInstagram />
