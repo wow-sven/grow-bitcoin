@@ -11,11 +11,11 @@ import {
   Drawer,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import LogoSVG from "../assets/logo.svg";
+import LogoSVG from "@/assets/logo.svg";
 
 import { IconMenu2 } from "@tabler/icons-react";
 import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
-import { shortAddress } from "../utils/address";
+import { shortAddress } from "@/utils/address";
 import { WalletConnectModal } from "./connect-model";
 import { useState } from "react";
 

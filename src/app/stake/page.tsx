@@ -11,16 +11,16 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import NavigationBar from "../../components/NavigationBar";
-import Footer from "../../components/Footer";
+import NavigationBar from "@/components/NavigationBar";
+import Footer from "@/components/Footer";
 
-import Staking1SVG from "../../assets/staking-1.svg";
-import Staking2SVG from "../../assets/staking-2.svg";
-import Staking3SVG from "../../assets/staking-3.svg";
-import {getTokenInfo, TokenInfo} from './util'
-import { useCurrentAddress, useRoochClient } from '@roochnetwork/rooch-sdk-kit'
-import {useEffect, useState} from 'react'
-import {useNetworkVariable} from '../networks'
+import Staking1SVG from "@/assets/staking-1.svg";
+import Staking2SVG from "@/assets/staking-2.svg";
+import Staking3SVG from "@/assets/staking-3.svg";
+import { getTokenInfo, TokenInfo } from "./util";
+import { useCurrentAddress, useRoochClient } from "@roochnetwork/rooch-sdk-kit";
+import { useEffect, useState } from "react";
+import { useNetworkVariable } from "../networks";
 
 const stakingList = [
   {
@@ -58,31 +58,33 @@ const stakingList = [
 ];
 
 export default function GrowPage() {
-  const client = useRoochClient()
-  const addr = useCurrentAddress()
-  const contractAddr = useNetworkVariable('contractAddr')
-  const [tokenInfo, setTokenInfo] = useState<TokenInfo>()
-  const [timeRemaining, setTimeRemaining] = useState(0)
-  const [balance, setBalance] = useState(0)
+  const client = useRoochClient();
+  const addr = useCurrentAddress();
+  const contractAddr = useNetworkVariable("contractAddr");
+  const [tokenInfo, setTokenInfo] = useState<TokenInfo>();
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [balance, setBalance] = useState(0);
   useEffect(() => {
     if (!addr) {
-      return
+      return;
     }
     getTokenInfo(client, contractAddr).then((result) => {
-      setTokenInfo(result)
-      setTimeRemaining(result.data.timeRemaining)
-      client.getBalance({
-        coinType: result.coinInfo.type,
-        owner: addr.genRoochAddress().toStr() || ''
-      }).then((result) => {
-        setBalance(Number(result.balance))
-      })
-    })
-  }, [client, contractAddr, addr])
+      setTokenInfo(result);
+      setTimeRemaining(result.data.timeRemaining);
+      client
+        .getBalance({
+          coinType: result.coinInfo.type,
+          owner: addr.genRoochAddress().toStr() || "",
+        })
+        .then((result) => {
+          setBalance(Number(result.balance));
+        });
+    });
+  }, [client, contractAddr, addr]);
 
   useEffect(() => {
     if (!tokenInfo) {
-      return
+      return;
     }
     const interval = setInterval(() => {
       const now = Date.now() / 1000;
@@ -91,7 +93,7 @@ export default function GrowPage() {
 
     // Cleanup interval on component unmount
     return () => clearInterval(interval);
-  }, [tokenInfo])
+  }, [tokenInfo]);
 
   const formatTimeRemaining = (seconds: number) => {
     const days = Math.floor(seconds / (24 * 3600));
@@ -113,12 +115,14 @@ export default function GrowPage() {
               <Title order={4} fw="500">
                 $GROW Info
               </Title>
-              <Text mt="4" c="gray.7" style={{ display: 'flex' }}>
-                <span style={{ minWidth: '150px' }}>Time Remaining :</span>
-                <span>{tokenInfo ? formatTimeRemaining(timeRemaining) : ''}</span>
+              <Text mt="4" c="gray.7" style={{ display: "flex" }}>
+                <span style={{ minWidth: "150px" }}>Time Remaining :</span>
+                <span>
+                  {tokenInfo ? formatTimeRemaining(timeRemaining) : ""}
+                </span>
               </Text>
-              <Text mt="4" c="gray.7" style={{ display: 'flex' }}>
-                <span style={{ minWidth: '150px' }}>Total stake :</span>
+              <Text mt="4" c="gray.7" style={{ display: "flex" }}>
+                <span style={{ minWidth: "150px" }}>Total stake :</span>
                 <span>{tokenInfo?.data.assetTotalValue} stas</span>
               </Text>
             </Box>
@@ -127,8 +131,7 @@ export default function GrowPage() {
               <Title order={4} fw="500">
                 {balance} $GROW
               </Title>
-              <Text mt="4" c="gray.7">
-              </Text>
+              <Text mt="4" c="gray.7"></Text>
               <Text mt="4" c="gray.7">
                 Your Balance
               </Text>

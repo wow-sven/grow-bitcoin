@@ -1,4 +1,3 @@
-import { Metadata } from "next";
 import RoochDappProvider from "./rooch-dapp-provider";
 import { createTheme, MantineProvider } from "@mantine/core";
 import "@fontsource/ibm-plex-sans/200.css";

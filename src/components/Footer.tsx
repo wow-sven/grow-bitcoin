@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Box, Container, Stack, Flex, Anchor } from "@mantine/core";
-import LogoSVG from "../assets/logo.svg";
+import LogoSVG from "@/assets/logo.svg";
 
 import {
   IconBrandX,

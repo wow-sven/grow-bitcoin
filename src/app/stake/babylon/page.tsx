@@ -4,8 +4,6 @@ import Link from "next/link";
 import {
   Anchor,
   Breadcrumbs,
-  Button,
-  Card,
   Container,
   Flex,
   Group,
@@ -13,24 +11,27 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import NavigationBar from "../../../components/NavigationBar";
-import Footer from "../../../components/Footer";
+import NavigationBar from "@/components/NavigationBar";
+import Footer from "@/components/Footer";
 
 import { IconHome } from "@tabler/icons-react";
-import {useCurrentAddress, useRoochClientQuery} from '@roochnetwork/rooch-sdk-kit'
-import {StakeCard} from '../../../components/stake-card'
+import {
+  useCurrentAddress,
+  useRoochClientQuery,
+} from "@roochnetwork/rooch-sdk-kit";
+import { StakeCard } from "@/components/stake-card";
 
 export default function BabylonStakingPage() {
-  const addr = useCurrentAddress()
+  const addr = useCurrentAddress();
 
-  const {data: bbns} = useRoochClientQuery('queryObjectStates', {
+  const { data: bbns } = useRoochClientQuery("queryObjectStates", {
     filter: {
       object_type_with_owner: {
-        owner: addr?.toStr() || '',
-        object_type: '0x4::bbn::BBNStakeSeal'
-      }
-    }
-  })
+        owner: addr?.toStr() || "",
+        object_type: "0x4::bbn::BBNStakeSeal",
+      },
+    },
+  });
   return (
     <>
       <NavigationBar />
@@ -61,16 +62,22 @@ export default function BabylonStakingPage() {
               on the official Babylon Staking Dashboard.
             </Text>
             <Text c="gray.7">
-              (y = x^(1/2)  x is lock day, x not exceeding 1000, so y never over 31 and bbn stake weight is 22)
+              (y = x^(1/2) x is lock day, x not exceeding 1000, so y never over
+              31 and bbn stake weight is 22)
             </Text>
           </Stack>
 
-          <StakeCard target={'bbn'} assets={bbns?.data.map((item) => {
-            return {
-              id: item.id,
-              value: item.decoded_value?.value['staking_value'] as string
+          <StakeCard
+            target={"bbn"}
+            assets={
+              bbns?.data.map((item) => {
+                return {
+                  id: item.id,
+                  value: item.decoded_value?.value["staking_value"] as string,
+                };
+              }) || []
             }
-          }) || []}/>
+          />
         </Flex>
       </Container>
 
