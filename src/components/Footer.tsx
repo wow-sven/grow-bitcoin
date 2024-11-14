@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Box, Container, Stack, Flex, Anchor } from "@mantine/core";
+import { Box, Container, Stack, Group, Anchor } from "@mantine/core";
 import LogoSVG from "@/assets/logo.svg";
 
 import {
@@ -11,14 +11,14 @@ import {
 
 export default function Footer() {
   return (
-    <Box mt="lg" py="md">
+    <Box mt="auto" py="md">
       <Container size="lg">
         <Stack>
           <Link href="/" style={{ width: "max-content" }}>
-            <LogoSVG width={80} />
+            <LogoSVG height={56} />
           </Link>
 
-          <Flex gap="xs">
+          <Group gap="xs">
             <Anchor c="dark" href="https://twitter.com/RoochNetwork">
               <IconBrandX />
             </Anchor>
@@ -31,7 +31,7 @@ export default function Footer() {
             <Anchor c="dark">
               <IconBrandLinkedin />
             </Anchor>
-          </Flex>
+          </Group>
         </Stack>
       </Container>
     </Box>

@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -34,7 +36,7 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
       <Container size="lg">
         <Flex py="md" align="center" gap="lg">
           <Link href="/">
-            <LogoSVG width={80} />
+            <LogoSVG height={56} />
           </Link>
           <Anchor
             component={Link}
@@ -56,12 +58,30 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
           </Anchor>
           <Anchor
             component={Link}
-            href=""
+            href="/projects"
             c="dark"
             underline="never"
-            fw={pathname === "" ? "500" : "400"}
+            fw={pathname === "/projects" ? "500" : "400"}
           >
-            Ideas
+            Projects
+          </Anchor>
+          <Anchor
+            component={Link}
+            href="/docs"
+            c="dark"
+            underline="never"
+            fw={pathname === "/docs" ? "500" : "400"}
+          >
+            Docs
+          </Anchor>
+          <Anchor
+            component={Link}
+            href="/portfolio"
+            c="dark"
+            underline="never"
+            fw={pathname === "/portfolio" ? "500" : "400"}
+          >
+            My Portfolio
           </Anchor>
           <Button
             radius="md"
@@ -96,7 +116,7 @@ function MobileNavigationBar({ style }: { style?: Object }) {
       <Container size="lg">
         <Flex py="md" align="center" gap="lg">
           <Link href="/">
-            <LogoSVG width={80} />
+            <LogoSVG height={56} />
           </Link>
 
           <UnstyledButton
@@ -125,26 +145,42 @@ function MobileNavigationBar({ style }: { style?: Object }) {
           <Button
             component={Link}
             href="/"
-            fw={pathname === "/" ? "500" : "400"}
             style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/" ? "filled" : "outline"}
           >
             Home
           </Button>
           <Button
             component={Link}
             href="/stake"
-            fw={pathname === "/stake" ? "500" : "400"}
             style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/stake" ? "filled" : "outline"}
           >
             Get $GROW
           </Button>
           <Button
             component={Link}
-            href=""
-            fw={pathname === "" ? "500" : "400"}
+            href="/projects"
             style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/projects" ? "filled" : "outline"}
           >
-            Ideas
+            Projects
+          </Button>
+          <Button
+            component={Link}
+            href="/docs"
+            style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/docs" ? "filled" : "outline"}
+          >
+            Docs
+          </Button>
+          <Button
+            component={Link}
+            href="/portfolio"
+            style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/portfolio" ? "filled" : "outline"}
+          >
+            My Portfolio
           </Button>
         </Stack>
       </Drawer>
@@ -153,11 +189,11 @@ function MobileNavigationBar({ style }: { style?: Object }) {
 }
 
 export default function NavigationBar({ style }: { style?: Object }) {
-  const desktopMatches = useMediaQuery("(min-width: 48em)");
+  const mobileMatches = useMediaQuery("(max-width: 48em)");
 
-  if (desktopMatches) {
-    return <DesktopNavigationBar style={style} />;
+  if (mobileMatches) {
+    return <MobileNavigationBar style={style} />;
   }
 
-  return <MobileNavigationBar style={style} />;
+  return <DesktopNavigationBar style={style} />;
 }
