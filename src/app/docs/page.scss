@@ -1,0 +1,68 @@
+.toc {
+  > ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    > li > p > a {
+      font-weight: 500;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 0.5em 1.5em;
+
+      a {
+        color: var(--mantine-color-gray-7);
+      }
+    }
+  }
+
+  p {
+    margin: 0;
+  }
+
+  strong {
+    font-weight: 400;
+  }
+
+  a {
+    display: block;
+    width: max-content;
+    padding: 0.15em 0;
+    text-decoration: none;
+    color: var(--mantine-color-text);
+
+    &:hover {
+      color: var(--mantine-color-growBTC-6);
+    }
+  }
+}
+
+#content {
+  font-size: 17px;
+
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  blockquote {
+    font-style: italic;
+    color: var(--mantine-color-gray-7);
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
