@@ -1,10 +1,10 @@
 interface Project {
   id: string;
+  slug: string;
   name: string;
   thumbnail: string;
   oneLiner: string;
   tags: string[];
-  index: number;
 }
 
 interface ProjectDetail extends Project {

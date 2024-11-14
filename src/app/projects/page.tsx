@@ -17,11 +17,11 @@ export default async function Projects() {
       const { fields } = c;
       a.push({
         id: c.id,
+        slug: fields.Slug,
         name: fields.Name,
         thumbnail: fields.Logo?.[0].thumbnails.large.url,
         oneLiner: fields["One-Liner"],
         tags: fields.Tags || [],
-        index: fields.ID,
       });
     }
     return a;

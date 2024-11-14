@@ -59,7 +59,7 @@ function ProjectCard({ data }: { data: Project }) {
         </Button>
         <Button
           component={Link}
-          href={`/project/${data.id}`}
+          href={`/project/${data.slug}`}
           size="xs"
           radius="xl"
         >
