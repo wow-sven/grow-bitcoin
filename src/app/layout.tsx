@@ -49,7 +49,7 @@ export default function RootLayout({ children }: Props) {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, user-scalable=no"
         />
-        <link rel="shortcut icon" href="/favicon.svg" />
+        <link rel="shortcut icon" type="image/png" href="/favicon.png" />
         <ColorSchemeScript />
       </head>
       <body>
