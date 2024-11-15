@@ -12,3 +12,10 @@ interface ProjectDetail extends Project {
   website: string;
   twitter: string;
 }
+
+interface FAQ {
+  id: string
+  icon: string
+  questions: string
+  answer: string
+}
