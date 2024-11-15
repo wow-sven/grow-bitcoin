@@ -3,6 +3,7 @@ import ClientProjectDetailPage from "./client-page";
 import { projectsTable } from "@/utils/airtable";
 
 function getProject(slug: string): Promise<any> {
+  console.log(slug)
   return new Promise((resolve, reject) => {
     projectsTable
       .select({

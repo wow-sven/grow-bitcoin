@@ -19,3 +19,14 @@ interface FAQ {
   questions: string
   answer: string
 }
+
+interface ContractProjectTableType {
+  tableId: string
+  isOpen: boolean
+}
+
+interface ContractProjectType {
+  id: string
+  isOpen: boolean
+  vote: string
+}

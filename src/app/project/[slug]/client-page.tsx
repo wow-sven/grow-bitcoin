@@ -23,6 +23,7 @@ import {
   IconThumbUp,
   IconExternalLink,
 } from "@tabler/icons-react";
+import {useRouter} from "next/router";
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
 
