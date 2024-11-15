@@ -49,14 +49,15 @@ function ProjectCard({ data }: { data: Project }) {
         ))}
       </Group>
       <Flex align="center" justify="space-between" mt="auto">
-        <Button
-          size="xs"
-          variant="outline"
-          leftSection={<IconThumbUp size="1rem" />}
-          radius="xl"
-        >
-          135 votes
-        </Button>
+        <p></p>
+        {/*<Button*/}
+        {/*  size="xs"*/}
+        {/*  variant="outline"*/}
+        {/*  leftSection={<IconThumbUp size="1rem" />}*/}
+        {/*  radius="xl"*/}
+        {/*>*/}
+        {/*  135 votes*/}
+        {/*</Button>*/}
         <Button
           component={Link}
           href={`/project/${data.slug}`}
