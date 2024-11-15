@@ -16,14 +16,14 @@ import {
   useMantineTheme,
 } from "@mantine/core";
 import { useMediaQuery } from "@mantine/hooks";
-import NavigationBar from "../components/NavigationBar";
-import Footer from "../components/Footer";
+import NavigationBar from "@/components/NavigationBar";
+import Footer from "@/components/Footer";
 
 import { IconQuestionMark, IconChevronCompactRight } from "@tabler/icons-react";
-import Step1SVG from "../assets/step-1.svg";
-import Step2SVG from "../assets/step-2.svg";
-import Step3SVG from "../assets/step-3.svg";
-import Step4SVG from "../assets/step-4.svg";
+import Step1SVG from "@/assets/step-1.svg";
+import Step2SVG from "@/assets/step-2.svg";
+import Step3SVG from "@/assets/step-3.svg";
+import Step4SVG from "@/assets/step-4.svg";
 
 const FaqList = [
   {
@@ -161,6 +161,7 @@ const IconWall = ({ size = 56 }) => {
 export default function Home() {
   const theme = useMantineTheme();
   const desktopMatches = useMediaQuery("(min-width: 48em)");
+  const mobileMatches = useMediaQuery("(min-width: 28em)");
 
   return (
     <>
@@ -176,23 +177,29 @@ export default function Home() {
         <IconWall />
         <Container size="lg" style={{ position: "relative", zIndex: 2 }}>
           <Stack align="center" gap="0">
-            <Title order={1} fz={{ base: "3.5rem", md: "5rem" }} fw="200">
+            <Title
+              order={1}
+              fz={{ base: "2.5rem", sm: "3.5rem", md: "5rem" }}
+              fw="200"
+              ta="center"
+            >
               Grow Bitcoin
             </Title>
-            <Text size="lg" c="gray.7">
+            <Text size="lg" c="gray.7" ta="center">
               Backing Ideas with Bitcoin Staking
             </Text>
-            <Group mt="lg">
+            <Group mt="lg" justify="center">
               <Button
                 component={Link}
                 href="/stake"
                 radius="md"
                 variant="outline"
                 size="md"
+                fullWidth={!mobileMatches}
               >
                 Get $GROW
               </Button>
-              <Button radius="md" size="md" disabled={true}>
+              <Button radius="md" size="md" fullWidth={!mobileMatches} disabled>
                 Vote for Ideas (coming soon)
               </Button>
             </Group>

@@ -11,21 +11,24 @@ import {
   Text,
   Title,
 } from "@mantine/core";
-import NavigationBar from "../../../components/NavigationBar";
-import Footer from "../../../components/Footer";
+import NavigationBar from "@/components/NavigationBar";
+import Footer from "@/components/Footer";
 
 import { IconHome } from "@tabler/icons-react";
-import {AssetsType, StakeCard} from '../../../components/stake-card'
-import {useCurrentAddress, useRoochClientQuery} from '@roochnetwork/rooch-sdk-kit'
+import { StakeCard } from "@/components/stake-card";
+import {
+  useCurrentAddress,
+  useRoochClientQuery,
+} from "@roochnetwork/rooch-sdk-kit";
 
 export default function SelfStakingPage() {
-  const addr = useCurrentAddress()
+  const addr = useCurrentAddress();
 
-  const {data: utxos} = useRoochClientQuery('queryUTXO', {
+  const { data: utxos } = useRoochClientQuery("queryUTXO", {
     filter: {
-      owner: addr?.toStr() || ''
-    }
-  })
+      owner: addr?.toStr() || "",
+    },
+  });
   return (
     <>
       <NavigationBar />
@@ -60,12 +63,17 @@ export default function SelfStakingPage() {
               on the official Babylon Staking Dashboard.
             </Text>
           </Stack>
-          <StakeCard target={'self'} assets={utxos?.data.map((item) => {
-            return {
-              id: item.id,
-              value: item.value.value
+          <StakeCard
+            target={"self"}
+            assets={
+              utxos?.data.map((item) => {
+                return {
+                  id: item.id,
+                  value: item.value.value,
+                };
+              }) || []
             }
-          }) || []}/>
+          />
         </Flex>
       </Container>
 

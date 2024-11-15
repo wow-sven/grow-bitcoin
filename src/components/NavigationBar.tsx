@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import { usePathname } from 'next/navigation'
+import { usePathname } from "next/navigation";
 import {
   Box,
   Container,
@@ -11,63 +13,90 @@ import {
   Drawer,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import LogoSVG from "../assets/logo.svg";
+import LogoSVG from "@/assets/logo.svg";
 
 import { IconMenu2 } from "@tabler/icons-react";
-import {useConnectWallet, useCurrentAddress, useWallets} from '@roochnetwork/rooch-sdk-kit'
-import {shortAddress} from '../utils/address'
-import {WalletConnectModal} from './connect-model'
-import {useState} from 'react'
+import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
+import { shortAddress } from "@/utils/address";
+import { WalletConnectModal } from "./connect-model";
+import { useState } from "react";
 
 function DesktopNavigationBar({ style }: { style?: Object }) {
-  const currentAddress = useCurrentAddress()
+  const currentAddress = useCurrentAddress();
   const pathname = usePathname();
 
-  const [showConnectModel, setShowConnectModel] = useState(false)
+  const [showConnectModel, setShowConnectModel] = useState(false);
 
   return (
-     <Box style={style}>
-       <WalletConnectModal isOpen={showConnectModel} onClose={()=>setShowConnectModel(false)}/>
-       <Container size="lg">
-         <Flex py="md" align="center" gap="lg">
-           <Link href="/">
-             <LogoSVG width={80} />
-           </Link>
-           <Anchor
-             component={Link}
-             href="/"
-             c="dark"
-             underline="never"
-             fw={pathname === "/" ? "500" : "400"}
-           >
-             Home
-           </Anchor>
-           <Anchor
-             component={Link}
-             href="/stake"
-             c="dark"
-             underline="never"
-             fw={pathname === "/grow" ? "500" : "400"}
-           >
-             Get $GROW
-           </Anchor>
-           <Anchor
-             component={Link}
-             href=""
-             c="dark"
-             underline="never"
-             fw={pathname === "" ? "500" : "400"}
-           >
-             Ideas
-           </Anchor>
-           <Button radius="md" ml="auto" onClick={() => {
-             setShowConnectModel(currentAddress === undefined)
-           }}>
-             {currentAddress ? shortAddress(currentAddress.toStr()) : 'Connect Wallet'}
-           </Button>
-         </Flex>
-       </Container>
-     </Box>
+    <Box style={style}>
+      <WalletConnectModal
+        isOpen={showConnectModel}
+        onClose={() => setShowConnectModel(false)}
+      />
+      <Container size="lg">
+        <Flex py="md" align="center" gap="lg">
+          <Link href="/">
+            <LogoSVG height={56} />
+          </Link>
+          <Anchor
+            component={Link}
+            href="/"
+            c="dark"
+            underline="never"
+            fw={pathname === "/" ? "500" : "400"}
+          >
+            Home
+          </Anchor>
+          <Anchor
+            component={Link}
+            href="/stake"
+            c="dark"
+            underline="never"
+            fw={pathname === "/grow" ? "500" : "400"}
+          >
+            Get $GROW
+          </Anchor>
+          <Anchor
+            component={Link}
+            href="/projects"
+            c="dark"
+            underline="never"
+            fw={pathname === "/projects" ? "500" : "400"}
+          >
+            Projects
+          </Anchor>
+          <Anchor
+            component={Link}
+            href="/docs"
+            c="dark"
+            underline="never"
+            fw={pathname === "/docs" ? "500" : "400"}
+          >
+            Docs
+          </Anchor>
+          <Anchor
+            component={Link}
+            href="/portfolio"
+            c="dark"
+            underline="never"
+            fw={pathname === "/portfolio" ? "500" : "400"}
+          >
+            My Portfolio
+          </Anchor>
+          <Button
+            radius="md"
+            ml="auto"
+            onClick={() => {
+              setShowConnectModel(currentAddress === undefined);
+            }}
+          >
+            {currentAddress
+              ? shortAddress(currentAddress.toStr())
+              : "Connect Wallet"}
+          </Button>
+        </Flex>
+      </Container>
+    </Box>
   );
 }
 
@@ -75,12 +104,19 @@ function MobileNavigationBar({ style }: { style?: Object }) {
   const [opened, { open, close }] = useDisclosure(false);
   const pathname = usePathname();
 
+  const currentAddress = useCurrentAddress();
+  const [showConnectModel, setShowConnectModel] = useState(false);
+
   return (
     <Box style={style}>
+      <WalletConnectModal
+        isOpen={showConnectModel}
+        onClose={() => setShowConnectModel(false)}
+      />
       <Container size="lg">
         <Flex py="md" align="center" gap="lg">
           <Link href="/">
-            <LogoSVG width={80} />
+            <LogoSVG height={56} />
           </Link>
 
           <UnstyledButton
@@ -91,7 +127,16 @@ function MobileNavigationBar({ style }: { style?: Object }) {
             <IconMenu2 />
           </UnstyledButton>
 
-          <Button radius="md">Connect Wallet</Button>
+          <Button
+            radius="md"
+            onClick={() => {
+              setShowConnectModel(currentAddress === undefined);
+            }}
+          >
+            {currentAddress
+              ? shortAddress(currentAddress.toStr())
+              : "Connect Wallet"}
+          </Button>
         </Flex>
       </Container>
 
@@ -100,26 +145,42 @@ function MobileNavigationBar({ style }: { style?: Object }) {
           <Button
             component={Link}
             href="/"
-            fw={pathname === "/" ? "500" : "400"}
             style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/" ? "filled" : "outline"}
           >
             Home
           </Button>
           <Button
             component={Link}
             href="/stake"
-            fw={pathname === "/stake" ? "500" : "400"}
             style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/stake" ? "filled" : "outline"}
           >
             Get $GROW
           </Button>
           <Button
             component={Link}
-            href=""
-            fw={pathname === "" ? "500" : "400"}
+            href="/projects"
             style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/projects" ? "filled" : "outline"}
           >
-            Ideas
+            Projects
+          </Button>
+          <Button
+            component={Link}
+            href="/docs"
+            style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/docs" ? "filled" : "outline"}
+          >
+            Docs
+          </Button>
+          <Button
+            component={Link}
+            href="/portfolio"
+            style={{ borderRadius: "0.325rem" }}
+            variant={pathname === "/portfolio" ? "filled" : "outline"}
+          >
+            My Portfolio
           </Button>
         </Stack>
       </Drawer>
@@ -128,11 +189,11 @@ function MobileNavigationBar({ style }: { style?: Object }) {
 }
 
 export default function NavigationBar({ style }: { style?: Object }) {
-  const desktopMatches = useMediaQuery("(min-width: 48em)");
+  const mobileMatches = useMediaQuery("(max-width: 48em)");
 
-  if (desktopMatches) {
-    return <DesktopNavigationBar style={style} />;
+  if (mobileMatches) {
+    return <MobileNavigationBar style={style} />;
   }
 
-  return <MobileNavigationBar style={style} />;
+  return <DesktopNavigationBar style={style} />;
 }
