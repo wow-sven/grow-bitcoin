@@ -25,6 +25,7 @@ import {
 } from "@tabler/icons-react";
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
+
   return (
     <>
       <NavigationBar />
@@ -81,45 +82,45 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
             </Anchor>
           </Group>
 
-          <Flex
-            align={{ base: "unset", xs: "center" }}
-            justify="space-between"
-            gap="xs"
-            mt="xl"
-            direction={{ base: "column", xs: "row" }}
-          >
-            <Button
-              variant="outline"
-              leftSection={<IconThumbUp size="1.5em" />}
-              radius="xl"
-            >
-              124 Votes
-            </Button>
-            <Group gap="0">
-              <Input
-                flex={1}
-                placeholder="Amount"
-                radius="md"
-                styles={{
-                  input: {
-                    borderTopRightRadius: 0,
-                    borderBottomRightRadius: 0,
-                    borderRight: 0,
-                  },
-                }}
-              />
-              <Button
-                radius="md"
-                style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
-              >
-                Vote
-              </Button>
-            </Group>
-          </Flex>
-          <Flex ta="right" gap="xs" justify="flex-end" mt="6" c="gray.7">
-            <Text size="sm">Your $GROW Balance:</Text>
-            <Text size="sm">996 $GROW</Text>
-          </Flex>
+          {/*<Flex*/}
+          {/*  align={{ base: "unset", xs: "center" }}*/}
+          {/*  justify="space-between"*/}
+          {/*  gap="xs"*/}
+          {/*  mt="xl"*/}
+          {/*  direction={{ base: "column", xs: "row" }}*/}
+          {/*>*/}
+          {/*  <Button*/}
+          {/*    variant="outline"*/}
+          {/*    leftSection={<IconThumbUp size="1.5em" />}*/}
+          {/*    radius="xl"*/}
+          {/*  >*/}
+          {/*    124 Votes*/}
+          {/*  </Button>*/}
+          {/*  <Group gap="0">*/}
+          {/*    <Input*/}
+          {/*      flex={1}*/}
+          {/*      placeholder="Amount"*/}
+          {/*      radius="md"*/}
+          {/*      styles={{*/}
+          {/*        input: {*/}
+          {/*          borderTopRightRadius: 0,*/}
+          {/*          borderBottomRightRadius: 0,*/}
+          {/*          borderRight: 0,*/}
+          {/*        },*/}
+          {/*      }}*/}
+          {/*    />*/}
+          {/*    <Button*/}
+          {/*      radius="md"*/}
+          {/*      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}*/}
+          {/*    >*/}
+          {/*      Vote*/}
+          {/*    </Button>*/}
+          {/*  </Group>*/}
+          {/*</Flex>*/}
+          {/*<Flex ta="right" gap="xs" justify="flex-end" mt="6" c="gray.7">*/}
+          {/*  <Text size="sm">Your $GROW Balance:</Text>*/}
+          {/*  <Text size="sm">996 $GROW</Text>*/}
+          {/*</Flex>*/}
 
           <Card bg="gray.0" radius="lg" mt="xl" p="lg">
             <Title order={4}>Your Votes</Title>

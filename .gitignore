@@ -40,5 +40,5 @@ sdk/typescript/src/generated/
 
 # pnpm store
 .pnpm-store/
-
+.env.local
 .DS_Store
