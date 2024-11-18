@@ -29,11 +29,12 @@ import {AnnotatedMoveStructView} from "@roochnetwork/rooch-sdk/src/client/types/
 import {toB64} from "@roochnetwork/rooch-sdk";
 
 function ProjectCard({project, contractProject}: { project: Project, contractProject?: ContractProjectType }) {
+    console.log(project)
     return (
         <Card radius="lg" h="100%" display="flex" withBorder>
             <Group align="center" gap="xs">
                 <Image
-                    src={project.thumbnail}
+                    src={project.icon}
                     alt="project name"
                     w="40"
                     miw="40"
@@ -65,7 +66,7 @@ function ProjectCard({project, contractProject}: { project: Project, contractPro
                 <Button
                     component={Link}
                     size="xs"
-                    href={`/project/${project.slug}?${toB64(new TextEncoder().encode(`${contractProject?.vote}|${contractProject?.isOpen}`))}`}
+                    href={`/project/${project.slug}`}
                     radius="xl"
                 >
                     View Project

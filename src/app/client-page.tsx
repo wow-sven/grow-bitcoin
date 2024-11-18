@@ -160,8 +160,11 @@ export default function Home({faq}: { faq: FAQ[] }) {
                             >
                                 Get $GROW
                             </Button>
-                            <Button radius="md" size="md" fullWidth={!mobileMatches} disabled>
-                                Vote for Ideas (coming soon)
+                            <Button
+                                component={Link}
+                                href="/projects"
+                                radius="md" size="md" fullWidth={!mobileMatches}>
+                                Vote for Ideas
                             </Button>
                         </Group>
                     </Stack>

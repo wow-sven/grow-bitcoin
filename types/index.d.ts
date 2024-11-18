@@ -4,6 +4,7 @@ interface Project {
   name: string;
   thumbnail: string;
   oneLiner: string;
+  icon: string;
   tags: string[];
 }
 

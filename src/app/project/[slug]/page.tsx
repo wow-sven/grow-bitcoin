@@ -30,13 +30,24 @@ export default async function ProjectDetail({
   params: { slug: string };
 }) {
   const { slug } = params;
+  const projectsResponse = await fetch(
+      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_PROJECT_TABLE_ID}?filterByFormula=${encodeURIComponent(`{Slug} = "${slug}"`)}&maxRecords=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      },
+  );
+  const projectRawData = await projectsResponse.json();
 
-  let projectRawData;
-  try {
-    projectRawData = await getProject(slug);
-  } catch (error) {
-    notFound();
-  }
+  // let projectRawData;
+  // try {
+  //   projectRawData = await getProject(slug);
+  // } catch (error) {
+  //   console.log(error)
+  //   notFound();
+  // }
 
   if (!projectRawData.fields.Show) {
     notFound();
@@ -53,6 +64,7 @@ export default async function ProjectDetail({
     tags: fields.Tags,
     website: fields.Website,
     twitter: fields.Twitter,
+    icon: ''
   };
 
   return <ClientProjectDetailPage project={project} />;
