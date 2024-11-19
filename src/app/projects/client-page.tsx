@@ -26,10 +26,8 @@ import {IconSearch, IconThumbUp, IconChevronDown} from "@tabler/icons-react";
 import {useRoochClient, useRoochClientQuery} from "@roochnetwork/rooch-sdk-kit";
 import {useNetworkVariable} from "@/app/networks";
 import {AnnotatedMoveStructView} from "@roochnetwork/rooch-sdk/src/client/types/generated";
-import {toB64} from "@roochnetwork/rooch-sdk";
 
 function ProjectCard({project, contractProject}: { project: Project, contractProject?: ContractProjectType }) {
-    console.log(project)
     return (
         <Card radius="lg" h="100%" display="flex" withBorder>
             <Group align="center" gap="xs">
@@ -54,20 +52,21 @@ function ProjectCard({project, contractProject}: { project: Project, contractPro
                 ))}
             </Group>
             <Flex align="center" justify="space-between" mt="auto">
+                { contractProject ?
+                    <Button
+                      size="xs"
+                      variant="outline"
+                      leftSection={<IconThumbUp size="1rem"/>}
+                      radius="xl"
+                    >
+                        {contractProject.vote}
+                    </Button>:<p/>
+                }
                 <Button
-                    size="xs"
-                    variant="outline"
-                    loading={contractProject === undefined}
-                    leftSection={<IconThumbUp size="1rem"/>}
-                    radius="xl"
-                >
-                    135 votes
-                </Button>
-                <Button
-                    component={Link}
-                    size="xs"
-                    href={`/project/${project.slug}`}
-                    radius="xl"
+                  component={Link}
+                  size="xs"
+                  href={`/project/${project.slug}`}
+                  radius="xl"
                 >
                     View Project
                 </Button>
@@ -94,12 +93,14 @@ export default function ClientProjectsPage({
 
     const {data: project_table} = useRoochClientQuery('queryObjectStates', {
         filter: {
-            object_type: `${contractAddr}::grow_information_v3::GrowProjectList`
+            object_type: `${contractAddr}::grow_information_v4::GrowProjectList`
         },
         queryOption: {
             decode: true
         }
     })
+
+    console.log(project_table)
 
     useEffect(() => {
         if (project_table) {

@@ -20,8 +20,11 @@ import {
   useCurrentAddress,
   useRoochClientQuery,
 } from "@roochnetwork/rooch-sdk-kit";
+import {WalletConnectModal} from '@/components/connect-model'
+import {useState} from 'react'
 
 export default function SelfStakingPage() {
+
   const addr = useCurrentAddress();
 
   const { data: utxos } = useRoochClientQuery("queryUTXO", {
@@ -32,7 +35,6 @@ export default function SelfStakingPage() {
   return (
     <>
       <NavigationBar />
-
       <Container size="lg" pt="1rem" pb="16rem">
         <Breadcrumbs
           mb="3rem"

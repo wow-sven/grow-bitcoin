@@ -2,28 +2,6 @@ import { notFound } from "next/navigation";
 import ClientProjectDetailPage from "./client-page";
 import { projectsTable } from "@/utils/airtable";
 
-function getProject(slug: string): Promise<any> {
-  console.log(slug)
-  return new Promise((resolve, reject) => {
-    projectsTable
-      .select({
-        filterByFormula: `{Slug} = "${slug}"`,
-        maxRecords: 1,
-      })
-      .firstPage((err, records: any) => {
-        if (err) {
-          reject(err);
-        } else {
-          if (records.length > 0) {
-            resolve(records[0]);
-          } else {
-            reject(new Error("Project not found"));
-          }
-        }
-      });
-  });
-}
-
 export default async function ProjectDetail({
   params,
 }: {
@@ -39,15 +17,7 @@ export default async function ProjectDetail({
         },
       },
   );
-  const projectRawData = await projectsResponse.json();
-
-  // let projectRawData;
-  // try {
-  //   projectRawData = await getProject(slug);
-  // } catch (error) {
-  //   console.log(error)
-  //   notFound();
-  // }
+  const projectRawData = (await projectsResponse.json()).records[0];
 
   if (!projectRawData.fields.Show) {
     notFound();
