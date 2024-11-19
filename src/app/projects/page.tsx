@@ -19,6 +19,7 @@ export default async function Projects() {
         id: c.id,
         slug: fields.Slug,
         name: fields.Name,
+        icon: `https://unavatar.io/x/${fields.Twitter.slice(fields.Twitter.lastIndexOf('/')+1)}`,
         thumbnail: fields.Logo?.[0].thumbnails.large.url,
         oneLiner: fields["One-Liner"],
         tags: fields.Tags || [],

@@ -23,7 +23,7 @@ type StakeInfo = {
 	harvest: number
 }
 
-type Action = 'stake' | 'unStake' | 'claim'
+type Action = 'stake' | 'unStake' | 'claim' | 'Not Found UTXO'
 export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 	const session = useCurrentSession()
 	const [showSessionModel, setShowSessionModel] = useState(false)
@@ -41,6 +41,8 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 			const item = assets[0]
 			setSelectValue(`${shortAddress(item.id)} | ${item.value} sats`)
 			setSelectUTXO(item.id)
+		} else {
+			setAction('Not Found UTXO')
 		}
 	}, [assets])
 
@@ -78,7 +80,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 	}, [client, contractAddr, selectUTXO, actionLoading])
 
 	const handleAction = async () => {
-		if (!selectUTXO) {
+		if (!selectUTXO || action === 'Not Found UTXO') {
 			return
 		}
 		if (!session) {
@@ -168,7 +170,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 					}
 				</Flex>
 			}
-			<Button size="md" radius="md" mt="md" onClick={handleAction} loading={stakeInfo === undefined || actionLoading}>
+			<Button size="md" radius="md" mt="md" onClick={handleAction} loading={(action != 'Not Found UTXO') && stakeInfo === undefined || actionLoading}>
 				{action}
 			</Button>
 		</Card>

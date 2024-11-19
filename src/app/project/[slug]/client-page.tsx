@@ -23,13 +23,81 @@ import {
   IconThumbUp,
   IconExternalLink,
 } from "@tabler/icons-react";
+import {useRouter} from "next/router";
+import {useCurrentAddress, useCurrentSession, useRoochClient, useRoochClientQuery} from '@roochnetwork/rooch-sdk-kit'
+import {Args, Transaction} from '@roochnetwork/rooch-sdk'
+import {AnnotatedMoveStructView} from '@roochnetwork/rooch-sdk/src/client/types/generated'
+import {useEffect, useState} from 'react'
+import {getTokenInfo, TokenInfo} from '@/app/stake/util'
+import {useNetworkVariable} from '@/app/networks'
+import {WalletConnectModal} from '@/components/connect-model'
+import {CreateSessionModal} from '@/components/session-model'
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
+  const [showConnectModel, setShowConnectModel] = useState(false);
+  const [showCreateSessionModel, setShowCreateSessionModel] = useState(false);
+  const session = useCurrentSession()
+  const contractAddr = useNetworkVariable('contractAddr')
+  const contractAddrTest = '0x1d6f6657fc996008a1e43b8c13805e969a091560d4cea57b1db9f3ce4450d977'
+  const [balance, setBalance] = useState(-1);
+  const [amount, setAmount] = useState('')
+  const client = useRoochClient()
+  const addr = useCurrentAddress()
+  const projectListObj = Args.object({
+    address: contractAddrTest,
+    module:'grow_information_v4',
+    name: 'GrowProjectList'
+  })
+  const { data } = useRoochClientQuery('executeViewFunction', {
+    target: `${contractAddrTest}::grow_information_v4::borrow_grow_project`,
+    args: [projectListObj, Args.string('test1')]
+  })
+
+  useEffect(() => {
+    if (!addr) {
+      return;
+    }
+    getTokenInfo(client, contractAddr).then((result) => {
+      client
+        .getBalance({
+          coinType: result.coinInfo.type,
+          owner: addr.genRoochAddress().toStr() || "",
+        })
+        .then((result) => {
+          setBalance(Number(result.balance));
+        });
+    });
+  }, [client, contractAddr, addr]);
+
+  console.log(amount)
+
+  const handleVote = async ()=> {
+    if (addr === null) {
+      setShowConnectModel(true)
+      return
+    }
+    if (session === null) {
+      setShowCreateSessionModel(true)
+      return
+    }
+    const tx = new Transaction()
+    tx.callFunction({
+      target: `${contractAddrTest}::grow_information_v4::vote_entry`,
+      args: [projectListObj, Args.string('test1'), Args.u256(BigInt(amount))]
+    })
+    const reuslt = await client.signAndExecuteTransaction({
+      transaction: tx,
+      signer: session
+    })
+
+    console.log(reuslt)
+  }
 
   return (
     <>
       <NavigationBar />
-
+      <WalletConnectModal isOpen={showConnectModel} onClose={() => setShowConnectModel(false)}/>
+      <CreateSessionModal isOpen={showCreateSessionModel} onClose={() => setShowCreateSessionModel(false)}/>
       <Container size="sm" py="xl">
         <Anchor component={Link} href="/projects" mb="md">
           <IconChevronLeft />
@@ -81,46 +149,68 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
               Twitter <IconExternalLink size="1em" />
             </Anchor>
           </Group>
-
-          {/*<Flex*/}
-          {/*  align={{ base: "unset", xs: "center" }}*/}
-          {/*  justify="space-between"*/}
-          {/*  gap="xs"*/}
-          {/*  mt="xl"*/}
-          {/*  direction={{ base: "column", xs: "row" }}*/}
-          {/*>*/}
-          {/*  <Button*/}
-          {/*    variant="outline"*/}
-          {/*    leftSection={<IconThumbUp size="1.5em" />}*/}
-          {/*    radius="xl"*/}
-          {/*  >*/}
-          {/*    124 Votes*/}
-          {/*  </Button>*/}
-          {/*  <Group gap="0">*/}
-          {/*    <Input*/}
-          {/*      flex={1}*/}
-          {/*      placeholder="Amount"*/}
-          {/*      radius="md"*/}
-          {/*      styles={{*/}
-          {/*        input: {*/}
-          {/*          borderTopRightRadius: 0,*/}
-          {/*          borderBottomRightRadius: 0,*/}
-          {/*          borderRight: 0,*/}
-          {/*        },*/}
-          {/*      }}*/}
-          {/*    />*/}
-          {/*    <Button*/}
-          {/*      radius="md"*/}
-          {/*      style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}*/}
-          {/*    >*/}
-          {/*      Vote*/}
-          {/*    </Button>*/}
-          {/*  </Group>*/}
-          {/*</Flex>*/}
-          {/*<Flex ta="right" gap="xs" justify="flex-end" mt="6" c="gray.7">*/}
-          {/*  <Text size="sm">Your $GROW Balance:</Text>*/}
-          {/*  <Text size="sm">996 $GROW</Text>*/}
-          {/*</Flex>*/}
+          {data?.vm_status === 'Executed' ?
+          <>
+            <Flex
+              align={{ base: "unset", xs: "center" }}
+              justify="space-between"
+              gap="xs"
+              mt="xl"
+              direction={{ base: "column", xs: "row" }}
+            >
+              <Button
+                variant="outline"
+                leftSection={<IconThumbUp size="1.5em" />}
+                radius="xl"
+                disabled={true}
+              >
+                {
+                  (data!.return_values![0].decoded_value as AnnotatedMoveStructView).value['vote_value'] as string
+                }
+              </Button>
+              <Group gap="0">
+                <Input
+                  flex={1}
+                  placeholder="Amount"
+                  radius="md"
+                  disabled={!addr}
+                  type='number'
+                  value={amount}
+                  onChange={(e) => {
+                    setAmount(e.target.value)
+                  }}
+                  styles={{
+                    input: {
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                      borderRight: 0,
+                    },
+                  }}
+                />
+                <Button
+                  radius="md"
+                  disabled={!addr}
+                  style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+                  onClick={handleVote}
+                >
+                  Vote
+                </Button>
+              </Group>
+            </Flex>
+            <Flex ta="right" gap="xs" justify="flex-end" mt="6" c="gray.7">
+              {
+                addr ? <>
+                  <Text size="sm">{`Your $GROW Balance: ${balance === -1 ? '-' : balance}`}</Text>
+                  {
+                    balance === 0 ? <Link href={'/stake'} style={{ color: 'inherit', fontSize: 'smaller' }}>
+                        <Text size="sm">To Stake</Text>
+                      </Link>:
+                      <></>
+                  }
+                  </>:<Text size="sm">Please connect your wallet first</Text>
+              }
+            </Flex></>:<></>
+          }
 
           <Card bg="gray.0" radius="lg" mt="xl" p="lg">
             <Title order={4}>Your Votes</Title>

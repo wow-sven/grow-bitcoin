@@ -4,6 +4,7 @@ interface Project {
   name: string;
   thumbnail: string;
   oneLiner: string;
+  icon: string;
   tags: string[];
 }
 
@@ -18,4 +19,15 @@ interface FAQ {
   icon: string
   questions: string
   answer: string
+}
+
+interface ContractProjectTableType {
+  tableId: string
+  isOpen: boolean
+}
+
+interface ContractProjectType {
+  id: string
+  isOpen: boolean
+  vote: string
 }
