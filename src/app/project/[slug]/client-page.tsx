@@ -38,24 +38,29 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   const [showCreateSessionModel, setShowCreateSessionModel] = useState(false);
   const session = useCurrentSession()
   const contractAddr = useNetworkVariable('contractAddr')
-  const contractAddrTest = '0x1d6f6657fc996008a1e43b8c13805e969a091560d4cea57b1db9f3ce4450d977'
+  const contractVersion = useNetworkVariable('contractVersion')
   const [balance, setBalance] = useState(-1);
   const [amount, setAmount] = useState('')
   const client = useRoochClient()
   const addr = useCurrentAddress()
+  const moduleName = `${contractAddr}::grow_information_${contractVersion}`
+  const [loading, setLoading] = useState(false)
   const projectListObj = Args.object({
-    address: contractAddrTest,
-    module:'grow_information_v5',
+    address: contractAddr,
+    module:`grow_information_${contractVersion}`,
     name: 'GrowProjectList'
   })
-  const { data } = useRoochClientQuery('executeViewFunction', {
-    target: `${contractAddrTest}::grow_information_v5::borrow_grow_project`,
-    args: [projectListObj, Args.string('test1')]
+  const { data, refetch } = useRoochClientQuery('executeViewFunction', {
+    target: `${moduleName}::borrow_grow_project`,
+    args: [projectListObj, Args.string(project.slug)]
   })
 
   useEffect(() => {
     if (!addr) {
-      return;
+      return
+    }
+    if (!data || data.vm_status !== 'Executed') {
+      return
     }
     getTokenInfo(client, contractAddr).then((result) => {
       client
@@ -67,9 +72,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
           setBalance(Number(result.balance));
         });
     });
-  }, [client, contractAddr, addr]);
-
-  console.log(amount)
+  }, [data, client, contractAddr, addr]);
 
   const handleVote = async ()=> {
     if (addr === null) {
@@ -82,15 +85,19 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
     }
     const tx = new Transaction()
     tx.callFunction({
-      target: `${contractAddrTest}::grow_information_v5::vote_entry`,
-      args: [projectListObj, Args.string('test1'), Args.u256(BigInt(amount))]
+      target: `${moduleName}::vote_entry`,
+      args: [projectListObj, Args.string(project.slug), Args.u256(BigInt(amount))]
     })
     const reuslt = await client.signAndExecuteTransaction({
       transaction: tx,
       signer: session
     })
 
-    console.log(reuslt)
+    if (reuslt.execution_info.status.type === 'executed') {
+      await refetch()
+    }
+
+    setLoading(false)
   }
 
   return (
@@ -190,6 +197,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
                 <Button
                   radius="md"
                   disabled={!addr}
+                  loading={loading}
                   style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                   onClick={handleVote}
                 >
