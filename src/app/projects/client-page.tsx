@@ -142,7 +142,7 @@ export default function ClientProjectsPage({
 	const contractAddr = useNetworkVariable('contractAddr')
 	const contractVersion = useNetworkVariable('contractVersion')
 	const client = useRoochClient()
-	const [contractProjects, _] = useState<Map<string, ContractProjectType>>(new Map())
+	const [contractProjects, setContractProjects] = useState<Map<string, ContractProjectType>>(new Map())
 	const moduleName = `${contractAddr}::grow_information_${contractVersion}`
 	const {data: project_table} = useRoochClientQuery('queryObjectStates', {
 		filter: {
@@ -178,19 +178,20 @@ export default function ClientProjectsPage({
 					decode: true
 				}
 			}).then((_contractProjects) => {
+				const newContractProjects = new Map(contractProjects);
 				_contractProjects.data?.map((item) => {
 					const view = (item.state.decoded_value!.value['value'] as AnnotatedMoveStructView).value
 					const id = view['id'] as string
-					contractProjects.set(id, {
+					newContractProjects.set(id, {
 						id: id,
 						isOpen: isOpen,
 						vote: view['vote_value'] as string
 					})
 				})
+				setContractProjects(newContractProjects)
 			})
 		}
-	}, [client, contractProjects, project_table])
-
+	}, [client, setContractProjects, project_table])
 
 	useEffect(() => {
 		if (selectedTags.length === tags.length) {
