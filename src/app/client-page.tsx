@@ -288,9 +288,7 @@ export default function Home({faq}: { faq: FAQ[] }) {
                                 <Title order={4} fw="500" mt="10" mb="4">
                                     {i.questions}
                                 </Title>
-                                <Text size="md" c="gray.7">
-                                    {i.answer}
-                                </Text>
+                                <Text size="md" c="gray.7" dangerouslySetInnerHTML={{ __html: i.answer.replace(/\n/g, '<br />') }}/>
                             </Grid.Col>
                         ))}
                     </Grid>
