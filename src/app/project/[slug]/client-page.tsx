@@ -32,6 +32,7 @@ import {getTokenInfo, TokenInfo} from '@/app/stake/util'
 import {useNetworkVariable} from '@/app/networks'
 import {WalletConnectModal} from '@/components/connect-model'
 import {CreateSessionModal} from '@/components/session-model'
+import {formatBalance} from '../../../utils/balance'
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   const [showConnectModel, setShowConnectModel] = useState(false);
@@ -209,7 +210,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
             <Flex ta="right" gap="xs" justify="flex-end" mt="6" c="gray.7">
               {
                 addr ? <>
-                  <Text size="sm">{`Your $GROW Balance: ${balance === -1 ? '-' : balance}`}</Text>
+                  <Text size="sm">{`Your $GROW Balance: ${balance === -1 ? '-' : formatBalance(balance)}`}</Text>
                   {
                     balance === 0 ? <Link href={'/stake'} style={{ color: 'inherit', fontSize: 'smaller' }}>
                         <Text size="sm">To Stake</Text>
