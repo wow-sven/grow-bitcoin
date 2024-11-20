@@ -45,11 +45,11 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   const addr = useCurrentAddress()
   const projectListObj = Args.object({
     address: contractAddrTest,
-    module:'grow_information_v4',
+    module:'grow_information_v5',
     name: 'GrowProjectList'
   })
   const { data } = useRoochClientQuery('executeViewFunction', {
-    target: `${contractAddrTest}::grow_information_v4::borrow_grow_project`,
+    target: `${contractAddrTest}::grow_information_v5::borrow_grow_project`,
     args: [projectListObj, Args.string('test1')]
   })
 
@@ -82,7 +82,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
     }
     const tx = new Transaction()
     tx.callFunction({
-      target: `${contractAddrTest}::grow_information_v4::vote_entry`,
+      target: `${contractAddrTest}::grow_information_v5::vote_entry`,
       args: [projectListObj, Args.string('test1'), Args.u256(BigInt(amount))]
     })
     const reuslt = await client.signAndExecuteTransaction({
