@@ -83,6 +83,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
       setShowCreateSessionModel(true)
       return
     }
+    setLoading(true)
     const tx = new Transaction()
     tx.callFunction({
       target: `${moduleName}::vote_entry`,
@@ -180,7 +181,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
                   flex={1}
                   placeholder="Amount"
                   radius="md"
-                  disabled={!addr}
+                  disabled={!addr || balance === 0}
                   type='number'
                   value={amount}
                   onChange={(e) => {
@@ -196,7 +197,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
                 />
                 <Button
                   radius="md"
-                  disabled={!addr}
+                  disabled={!addr || balance === 0}
                   loading={loading}
                   style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                   onClick={handleVote}

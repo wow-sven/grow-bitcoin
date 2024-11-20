@@ -98,6 +98,8 @@ function ProjectCard({project, contractProject, adminId }: {
 			<Flex align="center" justify="space-between" mt="auto">
 				{contractProject ? (
 					<Button
+						component={Link}
+						href={`/project/${project.slug}`}
 						size="xs"
 						variant="outline"
 						leftSection={<IconThumbUp size="1rem"/>}
