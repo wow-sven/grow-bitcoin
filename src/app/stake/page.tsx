@@ -22,6 +22,7 @@ import { useCurrentAddress, useRoochClient } from "@roochnetwork/rooch-sdk-kit";
 import { useEffect, useState } from "react";
 import { useNetworkVariable } from "../networks";
 import {WalletConnectModal} from '@/components/connect-model'
+import {formatBalance} from '../../utils/balance'
 
 const stakingList = [
   {
@@ -128,13 +129,13 @@ export default function GrowPage() {
               </Text>
               <Text mt="4" c="gray.7" style={{ display: "flex" }}>
                 <span style={{ minWidth: "150px" }}>Total stake :</span>
-                <span>{tokenInfo?.data.assetTotalValue} stas</span>
+                <span>{tokenInfo? formatBalance(tokenInfo?.data.assetTotalValue): '-'} stas</span>
               </Text>
             </Box>
 
             <Box ta="right">
               <Title order={4} fw="500">
-                {balance} $GROW
+                {formatBalance(balance)} $GROW
               </Title>
               <Text mt="4" c="gray.7"></Text>
               <Text mt="4" c="gray.7">
@@ -185,7 +186,6 @@ export default function GrowPage() {
                         radius="md"
                         w="148"
                         onClick={(event) => {
-                          console.log(addr)
                           if (!addr) {
                             event.preventDefault()
                             setShowConnectModel(true)

@@ -31,6 +31,7 @@ import {getTokenInfo, TokenInfo} from '@/app/stake/util'
 import {useCurrentAddress, useRoochClient, useRoochClientQuery} from '@roochnetwork/rooch-sdk-kit'
 import {useNetworkVariable} from '@/app/networks'
 import {AnnotatedMoveStructView} from '@roochnetwork/rooch-sdk/src/client/types/generated'
+import {formatBalance} from '@/utils/balance'
 
 function TableButton({
 											 active,
@@ -208,7 +209,7 @@ export default function Portfolio() {
 									</Title>
 								</Flex>
 								<Text size="2rem" lh="2.5rem" mt="4">
-									{balance === 0 ? '-' : balance}
+									{balance === 0 ? '-' : formatBalance(balance)}
 								</Text>
 								{/*<Text size="sm" c="gray.7">*/}
 								{/*  $GROW tokens*/}
@@ -223,7 +224,7 @@ export default function Portfolio() {
 									</Title>
 								</Flex>
 								<Text size="2rem" lh="2.5rem" mt="4">
-									{RGasBalance === 0 ? '-' : RGasBalance}
+									{RGasBalance === 0 ? '-' : formatBalance(RGasBalance)}
 								</Text>
 								{/*<Text size="sm" c="gray.7">*/}
 								{/*  $GROW tokens*/}
@@ -253,7 +254,7 @@ export default function Portfolio() {
 									</Title>
 								</Flex>
 								<Text size="2rem" lh="2.5rem" mt="4">
-									{votedCount === 0 ? '-': votedCount}
+									{votedProjects.length ===  0 ? '-' : votedProjects.length}
 								</Text>
 								{/*<Text size="sm" c="gray.7">*/}
 								{/*  $GROW tokens*/}
