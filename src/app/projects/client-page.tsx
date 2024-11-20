@@ -169,6 +169,12 @@ export default function ClientProjectsPage({
 		}
 	})
 
+const tx = new Transaction()
+	tx.callFunction({
+		target: '',
+		function: ''
+	})
+
 	useEffect(() => {
 		if (project_table && project_table.data.length > 0) {
 			const view = project_table.data[0].decoded_value!.value

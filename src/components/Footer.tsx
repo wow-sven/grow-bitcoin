@@ -4,9 +4,7 @@ import LogoSVG from "@/assets/logo.svg";
 
 import {
   IconBrandX,
-  IconBrandInstagram,
-  IconBrandYoutubeFilled,
-  IconBrandLinkedin,
+  IconBrandDiscord
 } from "@tabler/icons-react";
 
 export default function Footer() {
@@ -22,15 +20,18 @@ export default function Footer() {
             <Anchor c="dark" href="https://twitter.com/RoochNetwork">
               <IconBrandX />
             </Anchor>
-            <Anchor c="dark">
-              <IconBrandInstagram />
+            <Anchor c="dark" href="https://twitter.com/RoochNetwork">
+              <IconBrandDiscord />
             </Anchor>
-            <Anchor c="dark">
-              <IconBrandYoutubeFilled />
-            </Anchor>
-            <Anchor c="dark">
-              <IconBrandLinkedin />
-            </Anchor>
+            {/*<Anchor c="dark">*/}
+            {/*  <IconBrandInstagram />*/}
+            {/*</Anchor>*/}
+            {/*<Anchor c="dark">*/}
+            {/*  <IconBrandYoutubeFilled />*/}
+            {/*</Anchor>*/}
+            {/*<Anchor c="dark">*/}
+            {/*  <IconBrandLinkedin />*/}
+            {/*</Anchor>*/}
           </Group>
         </Stack>
       </Container>
