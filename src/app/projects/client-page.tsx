@@ -1,6 +1,6 @@
 "use client";
 
-import {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
     Badge,
     Box,
@@ -23,11 +23,46 @@ import NavigationBar from "@/components/NavigationBar";
 import Footer from "@/components/Footer";
 
 import {IconSearch, IconThumbUp, IconChevronDown} from "@tabler/icons-react";
-import {useRoochClient, useRoochClientQuery} from "@roochnetwork/rooch-sdk-kit";
+import {useCurrentAddress, useCurrentSession, useRoochClient, useRoochClientQuery} from "@roochnetwork/rooch-sdk-kit";
 import {useNetworkVariable} from "@/app/networks";
 import {AnnotatedMoveStructView} from "@roochnetwork/rooch-sdk/src/client/types/generated";
+import {Args, Transaction} from "@roochnetwork/rooch-sdk";
+import {CreateSessionModal} from "@/components/session-model";
 
-function ProjectCard({project, contractProject}: { project: Project, contractProject?: ContractProjectType }) {
+
+function ProjectCard({project, contractProject, admin_id}: { project: Project, contractProject?: ContractProjectType , admin_id: string}) {
+
+    const client = useRoochClient()
+    const contractAddrTest = '0x1d6f6657fc996008a1e43b8c13805e969a091560d4cea57b1db9f3ce4450d977'
+    const session = useCurrentSession()
+    const [showSessionModel, setShowSessionModel] = useState(false)
+    const handleNewPorject = async ()=> {
+        const projectListObj = Args.object({
+            address: contractAddrTest,
+            module:'grow_information_v5',
+            name: 'GrowProjectList'
+        })
+        console.log("session",session)
+        if (!session) {
+            setShowSessionModel(true)
+			return
+		}
+        const tx = new Transaction()
+        tx.callFunction({
+          target: `${contractAddrTest}::grow_information_v5::new_project`,
+          args: [projectListObj, Args.string(project.slug), Args.objectId(admin_id)]
+        })
+        const result = await client.signAndExecuteTransaction({
+          transaction: tx,
+          signer: session
+        })
+        console.log(result)
+          if (result.execution_info.status.type === "executed") {
+              alert("success");
+          } else if (result.execution_info.status.type === "moveabort") {
+              alert("Failed")
+          }
+  }
     return (
         <Card radius="lg" h="100%" display="flex" withBorder>
             <Group align="center" gap="xs">
@@ -41,6 +76,7 @@ function ProjectCard({project, contractProject}: { project: Project, contractPro
                 />
                 <Title order={4}>{project.name}</Title>
             </Group>
+            <CreateSessionModal isOpen={showSessionModel} onClose={()=> setShowSessionModel(false)}/>
             <Text c="gray.7" mt="8">
                 {project.oneLiner}
             </Text>
@@ -52,7 +88,7 @@ function ProjectCard({project, contractProject}: { project: Project, contractPro
                 ))}
             </Group>
             <Flex align="center" justify="space-between" mt="auto">
-                { contractProject ?
+                { contractProject ? (
                     <Button
                       size="xs"
                       variant="outline"
@@ -60,7 +96,15 @@ function ProjectCard({project, contractProject}: { project: Project, contractPro
                       radius="xl"
                     >
                         {contractProject.vote}
-                    </Button>:<p/>
+                    </Button>
+                ):(admin_id != "" ?<Button
+                      size="xs"
+                      variant="outline"
+                      radius="xl"
+                      onClick={handleNewPorject}
+                    >
+                        New Project
+                    </Button>:<p/>)
                 }
                 <Button
                   component={Link}
@@ -93,7 +137,19 @@ export default function ClientProjectsPage({
 
     const {data: project_table} = useRoochClientQuery('queryObjectStates', {
         filter: {
-            object_type: `${contractAddr}::grow_information_v4::GrowProjectList`
+            object_type: `${contractAddr}::grow_information_v5::GrowProjectList`
+        },
+        queryOption: {
+            decode: true
+        }
+    })
+
+    const currentAddress = useCurrentAddress();
+
+    const {data: admin_cap} = useRoochClientQuery('queryObjectStates', {
+        filter: {
+            object_type: `${contractAddr}::grow_information_v5::ProjectCap`,
+            owner: currentAddress?.genRoochAddress().toHexAddress()  || "",
         },
         queryOption: {
             decode: true
@@ -242,7 +298,9 @@ export default function ClientProjectsPage({
                                 filteredProjects.map((project) => (
                                     <Grid.Col span={{base: 12, xs: 6}} key={project.id}>
                                         <ProjectCard project={project}
-                                                     contractProject={contractProjects.get(project.slug)}/>
+                                                     contractProject={contractProjects.get(project.slug)}
+                                                     admin_id={admin_cap? admin_cap.data[0].id: ""}
+                                        />
                                     </Grid.Col>
                                 ))
                             ) : (
