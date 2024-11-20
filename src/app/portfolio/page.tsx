@@ -30,6 +30,7 @@ import {
 import {getTokenInfo, TokenInfo} from '@/app/stake/util'
 import {useCurrentAddress, useRoochClient, useRoochClientQuery} from '@roochnetwork/rooch-sdk-kit'
 import {useNetworkVariable} from '@/app/networks'
+import {AnnotatedMoveStructView} from '@roochnetwork/rooch-sdk/src/client/types/generated'
 
 function TableButton({
 											 active,
@@ -68,7 +69,6 @@ function TableButton({
 
 type VotedProject = {
 	id: string
-	timestamp: string
 	value: number
 }
 
@@ -79,6 +79,7 @@ export default function Portfolio() {
 	const client = useRoochClient()
 	const addr = useCurrentAddress()
 	const contractAddr = useNetworkVariable('contractAddr')
+	const [votedCount, setVoteCount] = useState(0)
 	const [balance, setBalance] = useState(0)
 	const [RGasBalance, setRGasBalance] = useState(0)
 	const contractVersion = useNetworkVariable('contractVersion')
@@ -89,28 +90,63 @@ export default function Portfolio() {
 			return
 		}
 
-		client.queryObjectStates({
-			filter: {
-				object_type_with_owner: {
-					owner: addr.toStr(),
-					object_type: `${contractAddr}::grow_point_${contractVersion}::PointBox`
-				}
-			},
-			queryOption: {
+		client.getStates({
+			accessPath: `/resource/${addr.genRoochAddress().toHexAddress()}/${contractAddr}::grow_information_${contractVersion}::UserVoteInfo`,
+			stateOption: {
 				decode: true
 			}
 		}).then((result) => {
-			const items = result.data
-				.map((item) => item.decoded_value?.value)
-				.filter((view) => view !== undefined)
-				.map((view) => ({
-					id: view!['project_id'] as string,
-					timestamp: view!['timestamp'] as string,
-					value: Number(view!['value'])
-				}));
+			if (result.length> 0 && result[0].decoded_value) {
+				const view = (( (result[0].decoded_value?.value['value'] as AnnotatedMoveStructView).value['vote_info']) as AnnotatedMoveStructView).value['handle'] as AnnotatedMoveStructView
+				const id = view.value['id']
 
-				setVotedProjects(items)
+				client.listStates({
+					accessPath: `/table/${id}`,
+					stateOption: {
+						decode: true
+					}
+				}).then((result) => {
+					let count = 0
+					const items = result.data.map((item) => {
+						const view = item.state.decoded_value!.value
+						const vote = Number(view!['value'])
+						count += vote
+						return {
+							id: view!['name'] as string,
+							value: vote
+						}
+					})
+					setVoteCount(count)
+					setVotedProjects(items)
+					console.log(result)
+				})
+				console.log(view.value['id'])
+			}
+			console.log(result)
 		})
+
+		// client.queryObjectStates({
+		// 	filter: {
+		// 		object_type_with_owner: {
+		// 			owner: addr.toStr(),
+		// 			object_type: `${contractAddr}::grow_point_${contractVersion}::PointBox`
+		// 		}
+		// 	},
+		// 	queryOption: {
+		// 		decode: true
+		// 	}
+		// }).then((result) => {
+		// 	const items = result.data
+		// 		.map((item) => item.decoded_value?.value)
+		// 		.filter((view) => view !== undefined)
+		// 		.map((view) => ({
+		// 			id: view!['project_id'] as string,
+		// 			timestamp: view!['timestamp'] as string,
+		// 			value: Number(view!['value'])
+		// 		}));
+		//
+		// 		setVotedProjects(items)
+		// })
 
 		client.getBalance({owner: addr.genRoochAddress().toStr(), coinType: '0x3::gas_coin::RGas'}).then((result) => {
 			setRGasBalance(Math.floor(Number(result.balance) / Math.pow(10, result.decimals)))
@@ -202,7 +238,7 @@ export default function Portfolio() {
 									</Title>
 								</Flex>
 								<Text size="2rem" lh="2.5rem" mt="4">
-									-
+									{votedCount === 0 ? '-': votedCount}
 								</Text>
 								{/*<Text size="sm" c="gray.7">*/}
 								{/*  $GROW tokens*/}
@@ -217,7 +253,7 @@ export default function Portfolio() {
 									</Title>
 								</Flex>
 								<Text size="2rem" lh="2.5rem" mt="4">
-									-
+									{votedCount === 0 ? '-': votedCount}
 								</Text>
 								{/*<Text size="sm" c="gray.7">*/}
 								{/*  $GROW tokens*/}
