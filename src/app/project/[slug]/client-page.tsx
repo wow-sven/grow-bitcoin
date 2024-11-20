@@ -114,7 +114,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
         <Card mt="sm" radius="lg" withBorder>
           <Group align="center">
             <Image
-              src={project.thumbnail}
+              src={project.icon}
               alt="project name"
               w="80"
               miw="80"

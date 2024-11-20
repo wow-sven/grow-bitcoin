@@ -34,7 +34,7 @@ export default async function ProjectDetail({
     tags: fields.Tags,
     website: fields.Website,
     twitter: fields.Twitter,
-    icon: ''
+    icon: `https://unavatar.io/x/${fields.Twitter.slice(fields.Twitter.lastIndexOf('/')+1)}`
   };
 
   return <ClientProjectDetailPage project={project} />;

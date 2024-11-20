@@ -48,7 +48,6 @@ function ProjectCard({project, contractProject, adminId }: {
 			module: `grow_information_${contractVersion}`,
 			name: 'GrowProjectList'
 		})
-		console.log('session', session)
 		if (!session) {
 			setShowSessionModel(true)
 			return

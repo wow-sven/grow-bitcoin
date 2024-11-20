@@ -20,7 +20,7 @@ export default function Footer() {
             <Anchor c="dark" href="https://twitter.com/RoochNetwork">
               <IconBrandX />
             </Anchor>
-            <Anchor c="dark" href="https://twitter.com/RoochNetwork">
+            <Anchor c="dark" href="https://discord.com/invite/rooch">
               <IconBrandDiscord />
             </Anchor>
             {/*<Anchor c="dark">*/}
