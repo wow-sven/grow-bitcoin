@@ -29,5 +29,5 @@ interface ContractProjectTableType {
 interface ContractProjectType {
   id: string
   isOpen: boolean
-  vote: string
+  vote: number
 }

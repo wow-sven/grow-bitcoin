@@ -142,6 +142,7 @@ export default function ClientProjectsPage({
 	const [mobileTocExpanded, setMobileTocExpanded] = useState(false)
 	const contractAddr = useNetworkVariable('contractAddr')
 	const contractVersion = useNetworkVariable('contractVersion')
+	const [sortBy, setSortBy] = useState<'none' | 'low' | 'high'>('none')
 	const client = useRoochClient()
 	const [contractProjects, setContractProjects] = useState<Map<string, ContractProjectType>>(new Map())
 	const moduleName = `${contractAddr}::grow_information_${contractVersion}`
@@ -168,7 +169,7 @@ export default function ClientProjectsPage({
 		}
 	})
 
-const tx = new Transaction()
+	const tx = new Transaction()
 	tx.callFunction({
 		target: '',
 		function: ''
@@ -192,7 +193,7 @@ const tx = new Transaction()
 					newContractProjects.set(id, {
 						id: id,
 						isOpen: isOpen,
-						vote: view['vote_value'] as string
+						vote: Number(view['vote_value'])
 					})
 				})
 				setContractProjects(newContractProjects)
@@ -207,20 +208,43 @@ const tx = new Transaction()
 	}, [tags, selectedTags])
 
 	const filteredProjects = useMemo(() => {
-		if (selectedTags.length === 0 && searchKeyword === '') return projects
+		let filtered: Array<Project> = projects
 
 		if (selectedTags.length === 0 && !!searchKeyword.length) {
-			return projects.filter((project) =>
+			filtered = projects.filter((project) =>
 				project.name.toLowerCase().includes(searchKeyword.toLowerCase()),
+			)
+		} else if (selectedTags.length > 0 && searchKeyword.length > 0) {
+			filtered = projects.filter(
+				(project) =>
+					selectedTags.some((tag) => project.tags.includes(tag)) &&
+					project.name.toLowerCase().includes(searchKeyword.toLowerCase()),
 			)
 		}
 
-		return projects.filter(
-			(project) =>
-				selectedTags.some((tag) => project.tags.includes(tag)) &&
-				project.name.toLowerCase().includes(searchKeyword.toLowerCase()),
-		)
-	}, [projects, selectedTags, searchKeyword])
+		if (sortBy === 'none') {
+			return filtered
+		}
+
+		const notListed = filtered.filter((item) => {
+			return contractProjects.get(item.slug) === undefined
+		})
+
+		const listed = filtered.filter((item) => {
+			return contractProjects.get(item.slug) !== undefined
+		})
+
+		listed.sort((a, b) => {
+			if (sortBy === 'low') {
+				return contractProjects.get(a.slug)!.vote - contractProjects.get(b.slug)!.vote
+			} else {
+				return contractProjects.get(b.slug)!.vote - contractProjects.get(a.slug)!.vote
+			}
+		})
+
+		return listed.concat(notListed)
+
+	}, [selectedTags, searchKeyword, projects, sortBy, contractProjects])
 
 	const FilterCheckboxGroup = useMemo(
 		() => (
@@ -300,8 +324,12 @@ const tx = new Transaction()
 							/>
 							<Select
 								placeholder="Sort by Votes"
-								data={['Highest to Lowest', 'Lowest to Highest']}
+								data={['None', 'Highest to Lowest', 'Lowest to Highest']}
 								comboboxProps={{radius: 'md'}}
+								onChange={(v) => {
+									console.log('排序')
+									setSortBy(v === 'None' ? 'none' : v === 'Highest to Lowest' ? 'high' : 'low')
+								}}
 								radius="md"
 							/>
 						</Flex>
