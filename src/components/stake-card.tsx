@@ -24,7 +24,7 @@ type StakeInfo = {
 	harvest: number
 }
 
-type Action = 'stake' | 'unStake' | 'claim' | 'Not Found UTXO'
+type Action = 'stake' | 'unStake' | 'claim' | 'Not Found'
 export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 	const session = useCurrentSession()
 	const [showSessionModel, setShowSessionModel] = useState(false)
@@ -43,7 +43,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 			setSelectValue(`${shortAddress(item.id)} | ${item.value} sats`)
 			setSelectUTXO(item.id)
 		} else {
-			setAction('Not Found UTXO')
+			setAction('Not Found')
 		}
 	}, [assets])
 
@@ -81,7 +81,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 	}, [client, contractAddr, selectUTXO, actionLoading])
 
 	const handleAction = async () => {
-		if (!selectUTXO || action === 'Not Found UTXO') {
+		if (!selectUTXO || action === 'Not Found') {
 			return
 		}
 		if (!session) {
@@ -149,7 +149,9 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 			p="lg"
 		>
 			<CreateSessionModal isOpen={showSessionModel} onClose={()=> setShowSessionModel(false)}/>
-			<Text fw="500">Select UTXO to start staking</Text>
+			<Text fw="500">{
+				target === 'bbn' ? 'Select Babylon Stake Seal' : 'Select UTXO'
+			}</Text>
 			<Select
 				size="md"
 				value={selectValue}
@@ -171,8 +173,8 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
 					}
 				</Flex>
 			}
-			<Button size="md" radius="md" mt="md" onClick={handleAction} loading={(action != 'Not Found UTXO') && stakeInfo === undefined || actionLoading}>
-				{action}
+			<Button size="md" radius="md" mt="md" onClick={handleAction} loading={(action != 'Not Found') && stakeInfo === undefined || actionLoading}>
+				{action === 'Not Found' ? target === 'bbn' ? 'Not Found Babylon Stake Seal' : 'Not Found UTXO' : action}
 			</Button>
 		</Card>
 	);

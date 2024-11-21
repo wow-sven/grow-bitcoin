@@ -115,35 +115,37 @@ export default function GrowPage() {
         onClose={() => setShowConnectModel(false)}
       />
       <Container pt="1rem" pb="4rem" size="lg">
-        <Card radius="lg" p="lg" bg="gray.0" mb="2rem">
-          <Flex justify="space-between">
-            <Box>
-              <Title order={4} fw="500">
-                $GROW Info
-              </Title>
-              <Text mt="4" c="gray.7" style={{ display: "flex" }}>
-                <span style={{ minWidth: "150px" }}>Time Remaining :</span>
-                <span>
-                  {tokenInfo ? formatTimeRemaining(timeRemaining) : ""}
+        {
+          addr ? <Card radius="lg" p="lg" bg="gray.0" mb="2rem">
+            <Flex justify="space-between">
+              <Box>
+                <Title order={4} fw="500">
+                  $GROW Info
+                </Title>
+                <Text mt="4" c="gray.7" style={{ display: "flex" }}>
+                  <span style={{ minWidth: "150px" }}>Time Remaining :</span>
+                  <span>
+                  {tokenInfo ? formatTimeRemaining(timeRemaining) : '-'}
                 </span>
-              </Text>
-              <Text mt="4" c="gray.7" style={{ display: "flex" }}>
-                <span style={{ minWidth: "150px" }}>Total stake :</span>
-                <span>{tokenInfo? formatBalance(tokenInfo?.data.assetTotalValue): '-'} stas</span>
-              </Text>
-            </Box>
+                </Text>
+                <Text mt="4" c="gray.7" style={{ display: "flex" }}>
+                  <span style={{ minWidth: "150px" }}>Total stake :</span>
+                  <span>{tokenInfo? formatBalance(tokenInfo?.data.assetTotalValue): '-'} stas</span>
+                </Text>
+              </Box>
 
-            <Box ta="right">
-              <Title order={4} fw="500">
-                {formatBalance(balance)} $GROW
-              </Title>
-              <Text mt="4" c="gray.7"></Text>
-              <Text mt="4" c="gray.7">
-                Your Balance
-              </Text>
-            </Box>
-          </Flex>
-        </Card>
+              <Box ta="right">
+                <Title order={4} fw="500">
+                  {formatBalance(balance)} $GROW
+                </Title>
+                <Text mt="4" c="gray.7"></Text>
+                <Text mt="4" c="gray.7">
+                  Your Balance
+                </Text>
+              </Box>
+            </Flex>
+          </Card>:<></>
+        }
         <Card radius="lg" p="lg" bg="gray.0" mb="2rem">
           <Flex justify="space-between">
             <Box>
