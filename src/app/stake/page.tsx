@@ -68,22 +68,26 @@ export default function GrowPage() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [balance, setBalance] = useState(0);
   useEffect(() => {
-    if (!addr) {
-      return;
-    }
     getTokenInfo(client, contractAddr).then((result) => {
       setTokenInfo(result);
       setTimeRemaining(result.data.timeRemaining);
-      client
-        .getBalance({
-          coinType: result.coinInfo.type,
-          owner: addr.genRoochAddress().toStr() || "",
-        })
-        .then((result) => {
-          setBalance(Number(result.balance));
-        });
     });
-  }, [client, contractAddr, addr]);
+  }, [client, contractAddr]);
+
+  useEffect(() => {
+    if (!addr || !tokenInfo) {
+      return
+    }
+    client
+      .getBalance({
+        coinType: tokenInfo.coinInfo.type,
+        owner: addr.genRoochAddress().toStr() || "",
+      })
+      .then((result) => {
+        setBalance(Number(result.balance));
+      });
+
+  }, [addr, tokenInfo])
 
   useEffect(() => {
     if (!tokenInfo) {
@@ -115,8 +119,7 @@ export default function GrowPage() {
         onClose={() => setShowConnectModel(false)}
       />
       <Container pt="1rem" pb="4rem" size="lg">
-        {
-          addr ? <Card radius="lg" p="lg" bg="gray.0" mb="2rem">
+          <Card radius="lg" p="lg" bg="gray.0" mb="2rem">
             <Flex justify="space-between">
               <Box>
                 <Title order={4} fw="500">
@@ -134,18 +137,19 @@ export default function GrowPage() {
                 </Text>
               </Box>
 
-              <Box ta="right">
-                <Title order={4} fw="500">
-                  {formatBalance(balance)} $GROW
-                </Title>
-                <Text mt="4" c="gray.7"></Text>
-                <Text mt="4" c="gray.7">
-                  Your Balance
-                </Text>
-              </Box>
+              {
+                balance > 0 ? <Box ta="right">
+                  <Title order={4} fw="500">
+                    {formatBalance(balance)} $GROW
+                  </Title>
+                  <Text mt="4" c="gray.7"></Text>
+                  <Text mt="4" c="gray.7">
+                    Your Balance
+                  </Text>
+                </Box>:<></>
+              }
             </Flex>
-          </Card>:<></>
-        }
+          </Card>
         <Card radius="lg" p="lg" bg="gray.0" mb="2rem">
           <Flex justify="space-between">
             <Box>
