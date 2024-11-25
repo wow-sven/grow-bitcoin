@@ -33,6 +33,7 @@ import {useNetworkVariable} from '@/app/networks'
 import {WalletConnectModal} from '@/components/connect-model'
 import {CreateSessionModal} from '@/components/session-model'
 import {formatBalance} from '../../../utils/balance'
+import Markdown from 'react-markdown'
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   console.log(project)
@@ -131,7 +132,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
 
           <Box mt="lg">
             <Title order={3}>About the Project</Title>
-            <Text mt="8">{project.description}</Text>
+            <Markdown>{project.description}</Markdown>
           </Box>
 
           <Box mt="lg">
