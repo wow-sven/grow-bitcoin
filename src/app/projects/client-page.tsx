@@ -74,8 +74,8 @@ function ProjectCard({project, contractProject, adminId }: {
 		<Card radius="lg" h="100%" display="flex" withBorder>
 			<Group align="center" gap="xs">
 				<Image
-					src={project.icon}
-					alt="project name"
+					src={project.avatar}
+					alt="avatar"
 					w="40"
 					miw="40"
 					h="40"
