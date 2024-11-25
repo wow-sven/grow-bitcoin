@@ -35,6 +35,7 @@ import {CreateSessionModal} from '@/components/session-model'
 import {formatBalance} from '../../../utils/balance'
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
+  console.log(project)
   const [showConnectModel, setShowConnectModel] = useState(false);
   const [showCreateSessionModel, setShowCreateSessionModel] = useState(false);
   const session = useCurrentSession()
@@ -115,8 +116,8 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
         <Card mt="sm" radius="lg" withBorder>
           <Group align="center">
             <Image
-              src={project.icon}
-              alt="project name"
+              src={project.avatar}
+              alt="avatar"
               w="80"
               miw="80"
               h="80"
