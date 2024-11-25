@@ -83,6 +83,15 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
           >
             My Portfolio
           </Anchor>
+          <Anchor
+            component={Link}
+            target="_blank"
+            href="https://airtable.com/app442wyztoEmOPul/pagOFIio54GoXGdZf/form"
+            c="dark"
+            underline="never"
+          >
+            Submit Project
+          </Anchor>
           <Button
             radius="md"
             ml="auto"
