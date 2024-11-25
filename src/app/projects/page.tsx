@@ -1,4 +1,5 @@
 import ClientProjectsPage from "./client-page";
+import * as console from 'node:console'
 
 export default async function Projects() {
   const projectsResponse = await fetch(
@@ -14,16 +15,20 @@ export default async function Projects() {
 
   const projects = projectsRawData.records.reduce((a: Project[], c: any) => {
     if (c.fields.Show) {
-      const { fields } = c;
-      a.push({
-        id: c.id,
-        slug: fields.Slug,
-        name: fields.Name,
-        icon: `https://unavatar.io/x/${fields.Twitter.slice(fields.Twitter.lastIndexOf('/')+1)}`,
-        thumbnail: fields.Logo?.[0].thumbnails.large.url,
-        oneLiner: fields["One-Liner"],
-        tags: fields.Tags || [],
-      });
+      try {
+        const { fields } = c;
+        a.push({
+          id: c.id,
+          slug: fields.Slug,
+          name: fields.Name,
+          icon: `https://unavatar.io/x/${fields.Twitter.slice(fields.Twitter.lastIndexOf('/')+1)}`,
+          thumbnail: fields.Logo?.[0].thumbnails.large.url,
+          oneLiner: fields["One-Liner"],
+          tags: fields.Tags || [],
+        });
+      } catch (e) {
+        console.log(e)
+      }
     }
     return a;
   }, []);
