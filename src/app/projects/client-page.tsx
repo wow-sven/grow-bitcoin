@@ -61,7 +61,6 @@ function ProjectCard({project, contractProject, adminId }: {
 			transaction: tx,
 			signer: session
 		})
-		console.log(result)
 		if (result.execution_info.status.type === 'executed') {
 			window.location.reload()
 		} else if (result.execution_info.status.type === 'moveabort') {
@@ -210,15 +209,16 @@ export default function ClientProjectsPage({
 	const filteredProjects = useMemo(() => {
 		let filtered: Array<Project> = projects
 
-		if (selectedTags.length === 0 && !!searchKeyword.length) {
+		if (searchKeyword.length > 0) {
 			filtered = projects.filter((project) =>
 				project.name.toLowerCase().includes(searchKeyword.toLowerCase()),
 			)
-		} else if (selectedTags.length > 0 && searchKeyword.length > 0) {
-			filtered = projects.filter(
+		}
+
+		if (selectedTags.length > 0) {
+			filtered = filtered.filter(
 				(project) =>
-					selectedTags.some((tag) => project.tags.includes(tag)) &&
-					project.name.toLowerCase().includes(searchKeyword.toLowerCase()),
+					selectedTags.some((tag) => project.tags.includes(tag))
 			)
 		}
 
