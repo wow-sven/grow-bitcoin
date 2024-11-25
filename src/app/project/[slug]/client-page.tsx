@@ -224,13 +224,13 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
             </Flex></>:<></>
           }
 
-          <Card bg="gray.0" radius="lg" mt="xl" p="lg">
-            <Title order={4}>Your Votes</Title>
-            <Text mt="4">
-              You have voted 4 times for the project and earned 4 BitXP as well
-              as 4 Project Alpha XP.
-            </Text>
-          </Card>
+          {/*<Card bg="gray.0" radius="lg" mt="xl" p="lg">*/}
+          {/*  <Title order={4}>Your Votes</Title>*/}
+          {/*  <Text mt="4">*/}
+          {/*    You have voted 4 times for the project and earned 4 BitXP as well*/}
+          {/*    as 4 Project Alpha XP.*/}
+          {/*  </Text>*/}
+          {/*</Card>*/}
         </Card>
       </Container>
 
