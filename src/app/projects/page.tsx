@@ -12,6 +12,7 @@ export default async function Projects() {
       },
     },
   );
+
   const projectsRawData = await projectsResponse.json();
 
   const projects = projectsRawData.records.reduce((a: Project[], c: any) => {
@@ -22,7 +23,7 @@ export default async function Projects() {
           id: c.id,
           slug: fields.Slug,
           name: fields.Name,
-          icon: `https://unavatar.io/x/${fields.Twitter.slice(fields.Twitter.lastIndexOf('/')+1)}`,
+          avatar: getXAvatar(fields.Twitter),
           thumbnail: fields.Logo?.[0].thumbnails.large.url,
           oneLiner: fields["One-Liner"],
           tags: fields.Tags || [],
