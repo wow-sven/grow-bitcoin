@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import ClientProjectDetailPage from "./client-page";
 import { projectsTable } from "@/utils/airtable";
+import {getXAvatar} from '@/utils/x'
 
 export default async function ProjectDetail({
   params,
@@ -34,7 +35,7 @@ export default async function ProjectDetail({
     tags: fields.Tags,
     website: fields.Website,
     twitter: fields.Twitter,
-    icon: `https://unavatar.io/x/${fields.Twitter.slice(fields.Twitter.lastIndexOf('/')+1)}`
+    avatar: getXAvatar(fields.Twitter)
   };
 
   return <ClientProjectDetailPage project={project} />;

@@ -1,5 +1,6 @@
 import ClientProjectsPage from "./client-page";
-import * as console from 'node:console'
+
+import {getXAvatar} from '@/utils/x'
 
 export default async function Projects() {
   const projectsResponse = await fetch(
