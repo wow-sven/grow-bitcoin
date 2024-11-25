@@ -10,6 +10,9 @@ export default async function Projects() {
         Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`,
         "Content-Type": "application/json",
       },
+      next: {
+        revalidate: 60 * 5
+      }
     },
   );
 
