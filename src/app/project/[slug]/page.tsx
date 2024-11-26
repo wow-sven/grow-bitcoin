@@ -1,42 +1,39 @@
-import { notFound } from "next/navigation";
-import ClientProjectDetailPage from "./client-page";
-import { projectsTable } from "@/utils/airtable";
-import {getXAvatar} from '@/utils/x'
+// Copyright (c) RoochNetwork
+// SPDX-License-Identifier: Apache-2.0
+import { notFound } from 'next/navigation'
+import ClientProjectDetailPage from './client-page'
+import { getXAvatar } from '@/utils/x'
 
-export default async function ProjectDetail({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const { slug } = params;
+export default async function ProjectDetail({ params }: { params: { slug: string } }) {
+  const { slug } = params
   const projectsResponse = await fetch(
-      `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_PROJECT_TABLE_ID}?filterByFormula=${encodeURIComponent(`{Slug} = "${slug}"`)}&maxRecords=1`,
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`,
-          "Content-Type": "application/json",
-        },
+    `https://api.airtable.com/v0/${process.env.AIRTABLE_BASE_ID}/${process.env.AIRTABLE_PROJECT_TABLE_ID}?filterByFormula=${encodeURIComponent(`{Slug} = "${slug}"`)}&maxRecords=1`,
+    {
+      headers: {
+        Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
       },
-  );
-  const projectRawData = (await projectsResponse.json()).records[0];
+    },
+  )
+  const projectRawData = (await projectsResponse.json()).records[0]
 
   if (!projectRawData.fields.Show) {
-    notFound();
+    notFound()
   }
 
-  const { fields } = projectRawData;
+  const { fields } = projectRawData
   const project: ProjectDetail = {
     id: projectRawData.id,
     slug: fields.Slug,
     name: fields.Name,
     description: fields.Details,
     thumbnail: fields.Logo?.[0].thumbnails.large.url,
-    oneLiner: fields["One-Liner"],
+    oneLiner: fields['One-Liner'],
     tags: fields.Tags,
     website: fields.Website,
     twitter: fields.Twitter,
-    avatar: getXAvatar(fields.Twitter)
-  };
+    avatar: getXAvatar(fields.Twitter),
+  }
 
-  return <ClientProjectDetailPage project={project} />;
+  return <ClientProjectDetailPage project={project} />
 }

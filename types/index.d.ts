@@ -1,17 +1,25 @@
+// Copyright (c) RoochNetwork
+// SPDX-License-Identifier: Apache-2.0
+
+declare module '*.svg' {
+  const content: any
+  export default content
+}
+
 interface Project {
-  id: string;
-  slug: string;
-  name: string;
-  thumbnail: string;
-  oneLiner: string;
-  avatar: string;
-  tags: string[];
+  id: string
+  slug: string
+  name: string
+  thumbnail: string
+  oneLiner: string
+  avatar: string
+  tags: string[]
 }
 
 interface ProjectDetail extends Project {
-  description: string;
-  website: string;
-  twitter: string;
+  description: string
+  website: string
+  twitter: string
 }
 
 interface FAQ {

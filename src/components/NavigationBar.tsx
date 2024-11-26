@@ -1,38 +1,28 @@
-"use client";
+// Copyright (c) RoochNetwork
+// SPDX-License-Identifier: Apache-2.0
+'use client'
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import {
-  Box,
-  Container,
-  Anchor,
-  Flex,
-  Button,
-  UnstyledButton,
-  Stack,
-  Drawer,
-} from "@mantine/core";
-import { useDisclosure, useMediaQuery } from "@mantine/hooks";
-import LogoSVG from "@/assets/logo.svg";
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Box, Container, Anchor, Flex, Button, UnstyledButton, Stack, Drawer } from '@mantine/core'
+import { useDisclosure, useMediaQuery } from '@mantine/hooks'
+import LogoSVG from '@/assets/logo.svg'
 
-import { IconMenu2 } from "@tabler/icons-react";
-import { useCurrentAddress } from "@roochnetwork/rooch-sdk-kit";
-import { shortAddress } from "@/utils/address";
-import { WalletConnectModal } from "./connect-model";
-import { useState } from "react";
+import { IconMenu2 } from '@tabler/icons-react'
+import { useCurrentAddress } from '@roochnetwork/rooch-sdk-kit'
+import { shortAddress } from '@/utils/address'
+import { WalletConnectModal } from './connect-model'
+import { useState } from 'react'
 
-function DesktopNavigationBar({ style }: { style?: Object }) {
-  const currentAddress = useCurrentAddress();
-  const pathname = usePathname();
+function DesktopNavigationBar({ style }: { style?: any }) {
+  const currentAddress = useCurrentAddress()
+  const pathname = usePathname()
 
-  const [showConnectModel, setShowConnectModel] = useState(false);
+  const [showConnectModel, setShowConnectModel] = useState(false)
 
   return (
     <Box style={style}>
-      <WalletConnectModal
-        isOpen={showConnectModel}
-        onClose={() => setShowConnectModel(false)}
-      />
+      <WalletConnectModal isOpen={showConnectModel} onClose={() => setShowConnectModel(false)} />
       <Container size="lg">
         <Flex py="md" align="center" gap="lg">
           <Link href="/">
@@ -43,7 +33,7 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
             href="/"
             c="dark"
             underline="never"
-            fw={pathname === "/" ? "500" : "400"}
+            fw={pathname === '/' ? '500' : '400'}
           >
             Home
           </Anchor>
@@ -52,7 +42,7 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
             href="/stake"
             c="dark"
             underline="never"
-            fw={pathname === "/grow" ? "500" : "400"}
+            fw={pathname === '/grow' ? '500' : '400'}
           >
             Get $GROW
           </Anchor>
@@ -61,7 +51,7 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
             href="/projects"
             c="dark"
             underline="never"
-            fw={pathname === "/projects" ? "500" : "400"}
+            fw={pathname === '/projects' ? '500' : '400'}
           >
             Projects
           </Anchor>
@@ -70,7 +60,7 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
             href="/docs"
             c="dark"
             underline="never"
-            fw={pathname === "/docs" ? "500" : "400"}
+            fw={pathname === '/docs' ? '500' : '400'}
           >
             Docs
           </Anchor>
@@ -79,7 +69,7 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
             href="/portfolio"
             c="dark"
             underline="never"
-            fw={pathname === "/portfolio" ? "500" : "400"}
+            fw={pathname === '/portfolio' ? '500' : '400'}
           >
             My Portfolio
           </Anchor>
@@ -96,32 +86,27 @@ function DesktopNavigationBar({ style }: { style?: Object }) {
             radius="md"
             ml="auto"
             onClick={() => {
-              setShowConnectModel(currentAddress === undefined);
+              setShowConnectModel(currentAddress === undefined)
             }}
           >
-            {currentAddress
-              ? shortAddress(currentAddress.toStr())
-              : "Connect Wallet"}
+            {currentAddress ? shortAddress(currentAddress.toStr()) : 'Connect Wallet'}
           </Button>
         </Flex>
       </Container>
     </Box>
-  );
+  )
 }
 
-function MobileNavigationBar({ style }: { style?: Object }) {
-  const [opened, { open, close }] = useDisclosure(false);
-  const pathname = usePathname();
+function MobileNavigationBar({ style }: { style?: any }) {
+  const [opened, { open, close }] = useDisclosure(false)
+  const pathname = usePathname()
 
-  const currentAddress = useCurrentAddress();
-  const [showConnectModel, setShowConnectModel] = useState(false);
+  const currentAddress = useCurrentAddress()
+  const [showConnectModel, setShowConnectModel] = useState(false)
 
   return (
     <Box style={style}>
-      <WalletConnectModal
-        isOpen={showConnectModel}
-        onClose={() => setShowConnectModel(false)}
-      />
+      <WalletConnectModal isOpen={showConnectModel} onClose={() => setShowConnectModel(false)} />
       <Container size="lg">
         <Flex py="md" align="center" gap="lg">
           <Link href="/">
@@ -131,7 +116,7 @@ function MobileNavigationBar({ style }: { style?: Object }) {
           <UnstyledButton
             ml="auto"
             onClick={open}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{ display: 'flex', alignItems: 'center' }}
           >
             <IconMenu2 />
           </UnstyledButton>
@@ -139,12 +124,10 @@ function MobileNavigationBar({ style }: { style?: Object }) {
           <Button
             radius="md"
             onClick={() => {
-              setShowConnectModel(currentAddress === undefined);
+              setShowConnectModel(currentAddress === undefined)
             }}
           >
-            {currentAddress
-              ? shortAddress(currentAddress.toStr())
-              : "Connect Wallet"}
+            {currentAddress ? shortAddress(currentAddress.toStr()) : 'Connect Wallet'}
           </Button>
         </Flex>
       </Container>
@@ -154,55 +137,55 @@ function MobileNavigationBar({ style }: { style?: Object }) {
           <Button
             component={Link}
             href="/"
-            style={{ borderRadius: "0.325rem" }}
-            variant={pathname === "/" ? "filled" : "outline"}
+            style={{ borderRadius: '0.325rem' }}
+            variant={pathname === '/' ? 'filled' : 'outline'}
           >
             Home
           </Button>
           <Button
             component={Link}
             href="/stake"
-            style={{ borderRadius: "0.325rem" }}
-            variant={pathname === "/stake" ? "filled" : "outline"}
+            style={{ borderRadius: '0.325rem' }}
+            variant={pathname === '/stake' ? 'filled' : 'outline'}
           >
             Get $GROW
           </Button>
           <Button
             component={Link}
             href="/projects"
-            style={{ borderRadius: "0.325rem" }}
-            variant={pathname === "/projects" ? "filled" : "outline"}
+            style={{ borderRadius: '0.325rem' }}
+            variant={pathname === '/projects' ? 'filled' : 'outline'}
           >
             Projects
           </Button>
           <Button
             component={Link}
             href="/docs"
-            style={{ borderRadius: "0.325rem" }}
-            variant={pathname === "/docs" ? "filled" : "outline"}
+            style={{ borderRadius: '0.325rem' }}
+            variant={pathname === '/docs' ? 'filled' : 'outline'}
           >
             Docs
           </Button>
           <Button
             component={Link}
             href="/portfolio"
-            style={{ borderRadius: "0.325rem" }}
-            variant={pathname === "/portfolio" ? "filled" : "outline"}
+            style={{ borderRadius: '0.325rem' }}
+            variant={pathname === '/portfolio' ? 'filled' : 'outline'}
           >
             My Portfolio
           </Button>
         </Stack>
       </Drawer>
     </Box>
-  );
+  )
 }
 
-export default function NavigationBar({ style }: { style?: Object }) {
-  const mobileMatches = useMediaQuery("(max-width: 48em)");
+export default function NavigationBar({ style }: { style?: any }) {
+  const mobileMatches = useMediaQuery('(max-width: 48em)')
 
   if (mobileMatches) {
-    return <MobileNavigationBar style={style} />;
+    return <MobileNavigationBar style={style} />
   }
 
-  return <DesktopNavigationBar style={style} />;
+  return <DesktopNavigationBar style={style} />
 }
