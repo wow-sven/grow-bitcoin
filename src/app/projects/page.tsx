@@ -19,7 +19,6 @@ export default async function Projects() {
   )
 
   const projectsRawData = await projectsResponse.json()
-
   const projects = projectsRawData.records.reduce((a: Project[], c: any) => {
     if (c.fields.Show) {
       try {

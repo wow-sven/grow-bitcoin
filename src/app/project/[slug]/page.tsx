@@ -13,6 +13,9 @@ export default async function ProjectDetail({ params }: { params: { slug: string
         Authorization: `Bearer ${process.env.AIRTABLE_ACCESS_TOKEN}`,
         'Content-Type': 'application/json',
       },
+      next: {
+        revalidate: 60 * 4, // Ensure that the reconstruction time is shorter than that of list data.
+      },
     },
   )
   const projectRawData = (await projectsResponse.json()).records[0]
