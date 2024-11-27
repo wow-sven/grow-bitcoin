@@ -1,18 +1,17 @@
-import Link from "next/link";
-import { Box, Container, Stack, Group, Anchor } from "@mantine/core";
-import LogoSVG from "@/assets/logo.svg";
+// Copyright (c) RoochNetwork
+// SPDX-License-Identifier: Apache-2.0
+import Link from 'next/link'
+import { Box, Container, Stack, Group, Anchor } from '@mantine/core'
+import LogoSVG from '@/assets/logo.svg'
 
-import {
-  IconBrandX,
-  IconBrandDiscord
-} from "@tabler/icons-react";
+import { IconBrandX, IconBrandDiscord } from '@tabler/icons-react'
 
 export default function Footer() {
   return (
     <Box mt="auto" py="md">
       <Container size="lg">
         <Stack>
-          <Link href="/" style={{ width: "max-content" }}>
+          <Link href="/" style={{ width: 'max-content' }}>
             <LogoSVG height={56} />
           </Link>
 
@@ -36,5 +35,5 @@ export default function Footer() {
         </Stack>
       </Container>
     </Box>
-  );
+  )
 }
