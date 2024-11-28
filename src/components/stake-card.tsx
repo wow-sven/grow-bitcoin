@@ -123,12 +123,18 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
         })
     }
 
-    const s = await signAndExecuteTransaction({
-      transaction: tx,
-    })
+    try {
+			await signAndExecuteTransaction({
+				transaction: tx,
+			})
 
-    setActionLoading(false)
-    console.log(s)
+    } catch (e: any) {
+      if (e.code === 1002) {
+        setShowSessionModel(true)
+      }
+		} finally {
+			setActionLoading(false)
+		}
   }
 
   const handleSelectChange = (value: string | null) => {
