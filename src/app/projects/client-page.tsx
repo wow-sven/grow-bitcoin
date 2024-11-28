@@ -51,7 +51,8 @@ function ProjectCard({
   const session = useCurrentSession()
   const [showSessionModel, setShowSessionModel] = useState(false)
   const [loading, setLoading] = useState(false)
-  const handleNewPorject = async () => {
+
+  const handleNewProject = async () => {
     setLoading(true)
     const projectListObj = Args.object({
       address: contractAddr,
@@ -114,7 +115,7 @@ function ProjectCard({
             variant="outline"
             radius="xl"
             loading={loading}
-            onClick={handleNewPorject}
+            onClick={handleNewProject}
           >
             New Project
           </Button>
@@ -147,7 +148,7 @@ export default function ClientProjectsPage({
   const [mobileTocExpanded, setMobileTocExpanded] = useState(false)
   const contractAddr = useNetworkVariable('contractAddr')
   const contractVersion = useNetworkVariable('contractVersion')
-  const [sortBy, setSortBy] = useState<'none' | 'low' | 'high'>('none')
+  const [sortBy, setSortBy] = useState<'none' | 'low' | 'high'>('high')
   const client = useRoochClient()
   const [contractProjects, setContractProjects] = useState<Map<string, ContractProjectType>>(
     new Map(),
@@ -219,6 +220,9 @@ export default function ClientProjectsPage({
   }, [tags, selectedTags])
 
   const filteredProjects = useMemo(() => {
+    if (contractProjects.size === 0) {
+      return []
+    }
     let filtered: Array<Project> = projects
 
     if (searchKeyword.length > 0) {
@@ -353,9 +357,7 @@ export default function ClientProjectsPage({
                     />
                   </Grid.Col>
                 ))
-              ) : (
-                <Text>No Results</Text>
-              )}
+              ) : <></>}
             </Grid>
           </Box>
         </Flex>
