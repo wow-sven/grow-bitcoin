@@ -38,7 +38,6 @@ import { formatBalance } from '@/utils/balance'
 import Markdown from 'react-markdown'
 
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
-  console.log(project)
   const [showConnectModel, setShowConnectModel] = useState(false)
   const [showCreateSessionModel, setShowCreateSessionModel] = useState(false)
   const session = useCurrentSession()
