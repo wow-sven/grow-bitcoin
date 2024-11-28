@@ -93,16 +93,22 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
       target: `${moduleName}::vote_entry`,
       args: [projectListObj, Args.string(project.slug), Args.u256(BigInt(amount))],
     })
-    const reuslt = await client.signAndExecuteTransaction({
-      transaction: tx,
-      signer: session,
-    })
+    try {
+      const reuslt = await client.signAndExecuteTransaction({
+        transaction: tx,
+        signer: session,
+      })
 
-    if (reuslt.execution_info.status.type === 'executed') {
-      await refetch()
+      if (reuslt.execution_info.status.type === 'executed') {
+        await refetch()
+      }
+    } catch (e: any) {
+      if (e.code === 1002) {
+        setShowCreateSessionModel(true)
+      }
+    } finally {
+      setLoading(false)
     }
-
-    setLoading(false)
   }
 
   return (
