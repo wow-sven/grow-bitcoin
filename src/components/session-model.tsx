@@ -32,7 +32,7 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({ isOpen, 
         appName: 'Rooch GROW',
         appUrl: 'https://test-grow.rooch.network',
         scopes: [`${contractAddr}::*::*`],
-        maxInactiveInterval: 12000,
+        maxInactiveInterval: 86400, // 1 day
       })
       onClose()
     } catch (e: any) {
