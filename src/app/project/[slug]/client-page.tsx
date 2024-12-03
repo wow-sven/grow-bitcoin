@@ -162,6 +162,16 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
             >
               Twitter <IconExternalLink size="1em" />
             </Anchor>
+            {!project.github ? (
+              <></>
+            ) : (
+              <Anchor
+                href={project.github}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: 2 }}
+              >
+                Github <IconExternalLink size="1em" />
+              </Anchor>
+            )}
           </Group>
           {data?.vm_status === 'Executed' ? (
             <>

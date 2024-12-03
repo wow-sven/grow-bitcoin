@@ -20,6 +20,7 @@ interface ProjectDetail extends Project {
   description: string
   website: string
   twitter: string
+  github?: string
 }
 
 interface FAQ {

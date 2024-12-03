@@ -36,6 +36,7 @@ export default async function ProjectDetail({ params }: { params: { slug: string
     website: fields.Website,
     twitter: fields.Twitter,
     avatar: getXAvatar(fields.Twitter),
+    github: 'Github' in fields ? fields.Github : null,
   }
 
   return <ClientProjectDetailPage project={project} />
