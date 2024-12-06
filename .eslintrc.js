@@ -18,6 +18,10 @@ module.exports = {
   env: {
     es2020: true,
   },
+  ignorePatterns: [
+    'next-env.d.ts',
+    'pnpm-lock.yaml'
+  ],
   rules: {
     'no-case-declarations': 'off',
     'no-implicit-coercion': [2, { number: true, string: true, boolean: false }],
