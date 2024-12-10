@@ -125,10 +125,13 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
     }
 
     try {
-      await signAndExecuteTransaction({
+      const result = await signAndExecuteTransaction({
         transaction: tx,
       })
-      toast.success(`${action} success`)
+
+      if (result.execution_info.status.type === 'executed') {
+        toast.success(`${action} success`)
+      }
     } catch (e: any) {
       if (e.code === 1002) {
         setShowSessionModel(true)
