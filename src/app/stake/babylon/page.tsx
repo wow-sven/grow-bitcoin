@@ -13,7 +13,6 @@ import { StakeCard } from '@/components/stake-card'
 
 export default function BabylonStakingPage() {
   const addr = useCurrentAddress()
-
   const { data: bbns } = useRoochClientQuery('queryObjectStates', {
     filter: {
       object_type_with_owner: {
@@ -21,7 +20,11 @@ export default function BabylonStakingPage() {
         object_type: '0x4::bbn::BBNStakeSeal',
       },
     },
+    queryOption: {
+      decode: true,
+    },
   })
+
   return (
     <>
       <NavigationBar />
