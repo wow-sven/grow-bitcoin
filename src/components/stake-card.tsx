@@ -11,7 +11,7 @@ import { shortAddress } from '@/utils/address'
 import { useNetworkVariable } from '@/app/networks'
 import { Args, Transaction } from '@roochnetwork/rooch-sdk'
 import { CreateSessionModal } from './session-model'
-import { formatBalance } from '@/utils/balance'
+import { formatNumber } from '@/utils/number'
 import toast from 'react-hot-toast'
 const moduleName = 'grow_bitcoin'
 export type AssetsType = {
@@ -233,7 +233,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
           {action === 'claim' ? (
             <>
               <Text fw="500">Eligible $GROW</Text>
-              <Text c="gray.7">{stakeInfo ? formatBalance(stakeInfo?.harvest) : '-'} $GROW</Text>
+              <Text c="gray.7">{stakeInfo ? formatNumber(stakeInfo?.harvest) : '-'} $GROW</Text>
             </>
           ) : action === 'unStake' ? (
             <Text fw="500">No revenue has been generated</Text>

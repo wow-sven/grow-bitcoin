@@ -15,7 +15,7 @@ import { useCurrentAddress, useRoochClient } from '@roochnetwork/rooch-sdk-kit'
 import { useEffect, useState } from 'react'
 import { useNetworkVariable } from '../networks'
 import { WalletConnectModal } from '@/components/connect-model'
-import { formatBalance } from '@/utils/balance'
+import { formatNumber } from '@/utils/number'
 
 const stakingList = [
   {
@@ -102,6 +102,7 @@ export default function GrowPage() {
     return `${days} : ${hours} : ${minutes} : ${secs}`
   }
 
+  console.log(tokenInfo)
   return (
     <>
       <NavigationBar />
@@ -119,14 +120,14 @@ export default function GrowPage() {
               </Text>
               <Text mt="4" c="gray.7" style={{ display: 'flex' }}>
                 <span style={{ minWidth: '150px' }}>Total stake :</span>
-                <span>{tokenInfo ? formatBalance(tokenInfo?.data.assetTotalValue) : '-'} stas</span>
+                <span>{tokenInfo ? formatNumber(tokenInfo?.data.assetTotalWeight) : '-'} stas</span>
               </Text>
             </Box>
 
             {balance > 0 ? (
               <Box ta="right">
                 <Title order={4} fw="500">
-                  {formatBalance(balance)} $GROW
+                  {formatNumber(balance)} $GROW
                 </Title>
                 <Text mt="4" c="gray.7"></Text>
                 <Text mt="4" c="gray.7">
