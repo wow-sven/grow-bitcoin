@@ -34,6 +34,7 @@ import { useCurrentAddress, useRoochClient } from '@roochnetwork/rooch-sdk-kit'
 import { useNetworkVariable } from '@/app/networks'
 import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/types/generated'
 import { formatNumber } from '@/utils/number'
+import { formatBalance } from '@/utils/balance'
 
 function TableButton({
   active,
@@ -251,7 +252,7 @@ export default function Portfolio() {
                   </Title>
                 </Flex>
                 <Text size="2rem" lh="2.5rem" mt="4">
-                  {votedCount === 0 ? '-' : formatNumber(votedCount)}
+                  {votedCount === 0 ? '-' : formatNumber(formatBalance(votedCount, 1))}
                 </Text>
                 {/*<Text size="sm" c="gray.7">*/}
                 {/*  $GROW tokens*/}
@@ -342,7 +343,7 @@ export default function Portfolio() {
                     <Table.Tr key={element.id}>
                       <Table.Td p="lg">{element.id}</Table.Td>
                       <Table.Td p="lg">{formatNumber(element.value)}</Table.Td>
-                      <Table.Td p="lg">{formatNumber(element.value)}</Table.Td>
+                      <Table.Td p="lg">{formatNumber(formatBalance(element.value, 1))}</Table.Td>
                       <Table.Td p="lg" ta="right">
                         <Anchor component={Link} href={`/project/${element.id}`} size="sm">
                           View
