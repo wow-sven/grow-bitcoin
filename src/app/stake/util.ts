@@ -11,6 +11,7 @@ export type TokenInfo = {
     endTime: number
     timeRemaining: number
     assetTotalValue: number
+    assetTotalWeight: number
   }
   coinInfo: {
     type: string
@@ -63,6 +64,7 @@ export async function getTokenInfo(client: RoochClient, address: string): Promis
     data: {
       alive: decode['alive'] as boolean,
       assetTotalValue: decode['asset_total_value'] as number,
+      assetTotalWeight: decode['asset_total_weight'] as number,
       startTime,
       endTime,
       timeRemaining: now > endTime ? 0 : Number((endTime - now).toFixed()),

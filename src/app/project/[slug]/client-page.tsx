@@ -34,7 +34,7 @@ import { getTokenInfo } from '@/app/stake/util'
 import { useNetworkVariable } from '@/app/networks'
 import { WalletConnectModal } from '@/components/connect-model'
 import { CreateSessionModal } from '@/components/session-model'
-import { formatBalance } from '@/utils/balance'
+import { formatNumber } from '@/utils/number'
 import Markdown from 'react-markdown'
 import toast from 'react-hot-toast'
 
@@ -190,11 +190,11 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
                   radius="xl"
                   disabled={true}
                 >
-                  {
+                  {formatNumber(
                     (data!.return_values![0].decoded_value as AnnotatedMoveStructView).value[
                       'vote_value'
-                    ] as string
-                  }
+                    ] as number,
+                  )}
                 </Button>
                 <Group gap="0">
                   <Input
@@ -229,7 +229,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
               <Flex ta="right" gap="xs" justify="flex-end" mt="6" c="gray.7">
                 {addr ? (
                   <>
-                    <Text size="sm">{`Your $GROW Balance: ${balance === -1 ? '-' : formatBalance(balance)}`}</Text>
+                    <Text size="sm">{`Your $GROW Balance: ${balance === -1 ? '-' : formatNumber(balance)}`}</Text>
                     {balance === 0 ? (
                       <Link href={'/stake'} style={{ color: 'inherit', fontSize: 'smaller' }}>
                         <Text size="sm">To Stake</Text>

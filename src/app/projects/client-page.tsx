@@ -35,6 +35,7 @@ import { useNetworkVariable } from '@/app/networks'
 import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/types/generated'
 import { Args, Transaction } from '@roochnetwork/rooch-sdk'
 import { CreateSessionModal } from '@/components/session-model'
+import { formatNumber } from "@/utils/number";
 
 function ProjectCard({
   project,
@@ -107,7 +108,7 @@ function ProjectCard({
             leftSection={<IconThumbUp size="1rem" />}
             radius="xl"
           >
-            {contractProject.vote}
+            {formatNumber(contractProject.vote)}
           </Button>
         ) : adminId !== '' ? (
           <Button
