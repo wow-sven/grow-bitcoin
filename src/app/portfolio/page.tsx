@@ -252,7 +252,7 @@ export default function Portfolio() {
                   </Title>
                 </Flex>
                 <Text size="2rem" lh="2.5rem" mt="4">
-                  {votedCount === 0 ? '-' : formatNumber(formatBalance(votedCount, 1))}
+                  {votedCount === 0 ? '-' : formatNumber(votedCount)}
                 </Text>
                 {/*<Text size="sm" c="gray.7">*/}
                 {/*  $GROW tokens*/}
