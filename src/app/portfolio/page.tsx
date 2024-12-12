@@ -343,7 +343,7 @@ export default function Portfolio() {
                     <Table.Tr key={element.id}>
                       <Table.Td p="lg">{element.id}</Table.Td>
                       <Table.Td p="lg">{formatNumber(element.value)}</Table.Td>
-                      <Table.Td p="lg">{formatNumber(formatBalance(element.value, 1))}</Table.Td>
+                      <Table.Td p="lg">{formatNumber(element.value)}</Table.Td>
                       <Table.Td p="lg" ta="right">
                         <Anchor component={Link} href={`/project/${element.id}`} size="sm">
                           View
