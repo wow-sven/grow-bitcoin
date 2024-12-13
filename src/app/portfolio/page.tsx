@@ -34,7 +34,6 @@ import { useCurrentAddress, useRoochClient } from '@roochnetwork/rooch-sdk-kit'
 import { useNetworkVariable } from '@/app/networks'
 import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/types/generated'
 import { formatNumber } from '@/utils/number'
-import { formatBalance } from '@/utils/balance'
 
 function TableButton({
   active,
