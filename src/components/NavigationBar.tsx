@@ -10,17 +10,12 @@ import LogoSVG from '@/assets/logo.svg'
 
 import { IconMenu2 } from '@tabler/icons-react'
 import { ConnectButton } from '@roochnetwork/rooch-sdk-kit'
-import { WalletConnectModal } from './connect-model'
-import { useState } from 'react'
 
 function DesktopNavigationBar({ style }: { style?: any }) {
   const pathname = usePathname()
 
-  const [showConnectModel, setShowConnectModel] = useState(false)
-
   return (
     <Box style={style}>
-      <WalletConnectModal isOpen={showConnectModel} onClose={() => setShowConnectModel(false)} />
       <Container size="lg">
         <Flex py="md" align="center" gap="lg">
           <Link href="/">
@@ -80,7 +75,9 @@ function DesktopNavigationBar({ style }: { style?: any }) {
           >
             Submit Project
           </Anchor>
-          <ConnectButton />
+          <div style={{ marginLeft: 'auto' }}>
+            <ConnectButton />
+          </div>
         </Flex>
       </Container>
     </Box>
