@@ -11,6 +11,7 @@ import './layout.css'
 import '@roochnetwork/rooch-sdk-kit/dist/index.css'
 import '@radix-ui/themes/styles.css'
 import { Theme } from '@radix-ui/themes'
+import { ErrorGuard } from './errorGraud'
 type Props = {
   children: React.ReactNode
 }
@@ -59,7 +60,10 @@ export default function RootLayout({ children }: Props) {
       <body>
         <MantineProvider theme={theme}>
           <Theme appearance="light">
-            <RoochDappProvider>{children}</RoochDappProvider>
+            <RoochDappProvider>
+              <ErrorGuard />
+              {children}
+            </RoochDappProvider>
           </Theme>
         </MantineProvider>
       </body>
