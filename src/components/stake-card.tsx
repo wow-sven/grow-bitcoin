@@ -147,58 +147,58 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
     setSelectUTXO(id!.id)
   }
 
-  const handleAllAction = async (action: 'stake' | 'unStake' | 'claim') => {
-    const utxoIds = assets.map((item) => item.id)
-    if (!utxoIds) {
-      toast.error('Not found utxo')
-      return
-    }
+  // const handleAllAction = async (action: 'stake' | 'unStake' | 'claim') => {
+  //   const utxoIds = assets.map((item) => item.id)
+  //   if (!utxoIds) {
+  //     toast.error('Not found utxo')
+  //     return
+  //   }
 
-    const tag = target === 'bbn' ? '_bbn' : ''
+  //   const tag = target === 'bbn' ? '_bbn' : ''
 
-    setActionLoading(true)
-    const func = `${contractAddr}::${moduleName}`
-    let tx: Transaction
-    switch (action) {
-      case 'claim':
-        tx = new Transaction()
-        tx.callFunction({
-          target: `${func}::batch_harvest${tag}`,
-          args: [Args.vec('objectId', utxoIds)],
-        })
+  //   setActionLoading(true)
+  //   const func = `${contractAddr}::${moduleName}`
+  //   let tx: Transaction
+  //   switch (action) {
+  //     case 'claim':
+  //       tx = new Transaction()
+  //       tx.callFunction({
+  //         target: `${func}::batch_harvest${tag}`,
+  //         args: [Args.vec('objectId', utxoIds)],
+  //       })
 
-        break
-      case 'stake':
-        tx = new Transaction()
-        tx.callFunction({
-          target: `${func}::batch_stake${tag}`,
-          args: [Args.vec('objectId', utxoIds)],
-        })
+  //       break
+  //     case 'stake':
+  //       tx = new Transaction()
+  //       tx.callFunction({
+  //         target: `${func}::batch_stake${tag}`,
+  //         args: [Args.vec('objectId', utxoIds)],
+  //       })
 
-        break
-      case 'unStake':
-        tx = new Transaction()
-        tx.callFunction({
-          target: `${func}::batch_unstake${tag}`,
-          args: [Args.vec('objectId', utxoIds)],
-        })
-    }
-    tx.setMaxGas(10000000)
+  //       break
+  //     case 'unStake':
+  //       tx = new Transaction()
+  //       tx.callFunction({
+  //         target: `${func}::batch_unstake${tag}`,
+  //         args: [Args.vec('objectId', utxoIds)],
+  //       })
+  //   }
+  //   tx.setMaxGas(10000000)
 
-    try {
-      const result = await signAndExecuteTransaction({
-        transaction: tx,
-      })
+  //   try {
+  //     const result = await signAndExecuteTransaction({
+  //       transaction: tx,
+  //     })
 
-      if (result.execution_info.status.type === 'executed') {
-        toast.success(`${action} success`)
-      }
-    } catch (e: any) {
-      console.log(e)
-    } finally {
-      setActionLoading(false)
-    }
-  }
+  //     if (result.execution_info.status.type === 'executed') {
+  //       toast.success(`${action} success`)
+  //     }
+  //   } catch (e: any) {
+  //     console.log(e)
+  //   } finally {
+  //     setActionLoading(false)
+  //   }
+  // }
 
   return (
     <Card flex={{ base: 'auto', sm: 3 }} withBorder bg="gray.0" radius="lg" p="lg">
@@ -240,7 +240,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
             : action}
         </Button>
       </SessionKeyGuard>
-      {assets.length > 1 ? (
+      {/* {assets.length > 1 ? (
         <Flex justify="space-evenly" mt="md" style={{ width: '100%' }}>
           <SessionKeyGuard onClick={() => handleAllAction('stake')}>
             <Button size="md" radius="md" style={{ flexGrow: 1 }}>
@@ -260,7 +260,7 @@ export const StakeCard: React.FC<StakeCardProps> = ({ target, assets }) => {
         </Flex>
       ) : (
         <></>
-      )}
+      )} */}
     </Card>
   )
 }
