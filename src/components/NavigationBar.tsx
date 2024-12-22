@@ -37,7 +37,7 @@ function DesktopNavigationBar({ style }: { style?: any }) {
             underline="never"
             fw={pathname === '/grow' ? '500' : '400'}
           >
-            Get $GROW
+            Earn $GROW
           </Anchor>
           <Anchor
             component={Link}

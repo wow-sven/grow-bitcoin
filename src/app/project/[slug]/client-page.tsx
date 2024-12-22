@@ -8,13 +8,17 @@ import {
   Box,
   Button,
   Card,
+  Center,
   Container,
   Flex,
   Group,
   Image,
   Input,
+  Table,
   Text,
   Title,
+  Tooltip,
+  Pagination,
 } from '@mantine/core'
 import Link from 'next/link'
 import NavigationBar from '@/components/NavigationBar'
@@ -28,30 +32,55 @@ import {
   useRoochClient,
   useRoochClientQuery,
 } from '@roochnetwork/rooch-sdk-kit'
-import { Args, Transaction } from '@roochnetwork/rooch-sdk'
+import { Args, RoochAddress, Transaction } from '@roochnetwork/rooch-sdk'
 import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/types/generated'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { getTokenInfo } from '@/app/stake/util'
 import { useNetworkVariable } from '@/app/networks'
 import { formatNumber } from '@/utils/number'
 import Markdown from 'react-markdown'
 import toast from 'react-hot-toast'
-
+const getRankEmoji = (index: number) => {
+  switch (index) {
+    case 0:
+      return '🥇'
+    case 1:
+      return '🥈'
+    case 2:
+      return '🥉'
+    default:
+      return index + 1 // Adjust for 1-based index
+  }
+}
 export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   const session = useCurrentSession()
   const contractAddr = useNetworkVariable('contractAddr')
   const contractVersion = useNetworkVariable('contractVersion')
+  const [initVoteData, setInitVoteData] = useState(false)
+  const [initVoteDataFinish, setInitVoteDataFinish] = useState(false)
+  const [page, setPage] = useState(0)
   const [balance, setBalance] = useState(-1)
-  const [amount, setAmount] = useState('')
+  const [amount, setAmount] = useState('1')
+  const [voters, setVoters] = useState<Array<VoterInfo>>([])
   const client = useRoochClient()
   const addr = useCurrentAddress()
   const moduleName = `${contractAddr}::grow_information_${contractVersion}`
   const [loading, setLoading] = useState(false)
+  const [myVoteCount, setMyVoteCount] = useState('-')
+  const [myRank, setMyRank] = useState<Number>()
   const projectListObj = Args.object({
     address: contractAddr,
     module: `grow_information_${contractVersion}`,
     name: 'GrowProjectList',
   })
+  const roochAddressHex = useMemo(() => {
+    if (addr) {
+      return addr.genRoochAddress().toHexAddress()
+    } else {
+      return ''
+    }
+  }, [addr])
+
   const { data, refetch } = useRoochClientQuery('executeViewFunction', {
     target: `${moduleName}::borrow_grow_project`,
     args: [projectListObj, Args.string(project.slug)],
@@ -59,9 +88,6 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
 
   useEffect(() => {
     if (!addr) {
-      return
-    }
-    if (!data || data.vm_status !== 'Executed') {
       return
     }
     getTokenInfo(client, contractAddr).then((result) => {
@@ -74,7 +100,73 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
           setBalance(Number(result.balance))
         })
     })
-  }, [data, client, contractAddr, addr])
+    client
+      .getStates({
+        accessPath: `/resource/${addr.genRoochAddress().toHexAddress()}/${contractAddr}::grow_information_${contractVersion}::UserVoteInfo`,
+        stateOption: {
+          decode: true,
+        },
+      })
+      .then((result) => {
+        if (result.length > 0 && result[0].decoded_value) {
+          const view = (
+            (result[0].decoded_value?.value['value'] as AnnotatedMoveStructView).value[
+              'vote_info'
+            ] as AnnotatedMoveStructView
+          ).value['handle'] as AnnotatedMoveStructView
+          const id = view.value['id']
+
+          client
+            .listStates({
+              accessPath: `/table/${id}`,
+              stateOption: {
+                decode: true,
+              },
+            })
+            .then((result) => {
+              for (let item of result.data) {
+                const view = item.state.decoded_value!.value
+                const name = view!['name'] as string
+
+                if (name === project.slug) {
+                  const vote = view!['value'] as string
+                  setMyVoteCount(vote)
+                  break
+                }
+              }
+            })
+        }
+      })
+  }, [addr, data])
+
+  useEffect(() => {
+    if (!data || data.vm_status !== 'Executed') {
+      return
+    }
+
+    if (initVoteData) {
+      return
+    }
+
+    setInitVoteData(true)
+
+    const _voteDetail = (data.return_values![0].decoded_value as AnnotatedMoveStructView).value[
+      'vote_detail'
+    ] as AnnotatedMoveStructView
+    const tableHandle = (_voteDetail.value.handle as AnnotatedMoveStructView).value['id'] as string
+    getAllVoters(tableHandle)
+  }, [data, client, contractAddr, initVoteData, setInitVoteData])
+
+  useEffect(() => {
+    if (!roochAddressHex || !initVoteDataFinish) {
+      return
+    }
+    voters.find((item, i) => {
+      if (item.address === roochAddressHex) {
+        setMyRank(i)
+      }
+    })
+  }, [voters, roochAddressHex])
 
   const handleVote = async (especial?: number) => {
     setLoading(true)
@@ -97,6 +189,34 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
       console.log(e)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const getAllVoters = async (tabel: string, cursor?: string) => {
+    const result = await client.listStates({
+      accessPath: `/table/${tabel}`,
+      stateOption: {
+        decode: true,
+      },
+      cursor,
+      limit: '100',
+    })
+
+    const items = result.data.map((item) => {
+      const view = item.state.decoded_value!.value
+      return {
+        address: view.name.toString(),
+        value: Number(view.value),
+      }
+    })
+    setVoters((prev: VoterInfo[]) => {
+      return prev.concat(items).sort((a, b) => b.value - a.value)
+    })
+
+    if (result.has_next_page) {
+      getAllVoters(tabel, result.next_cursor || undefined)
+    } else {
+      setInitVoteDataFinish(true)
     }
   }
 
@@ -201,7 +321,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
                   <SessionKeyGuard onClick={() => handleVote()}>
                     <Button
                       radius="md"
-                      disabled={!addr || balance === 0}
+                      disabled={!addr || balance === 0 || amount === ''}
                       loading={loading}
                       style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
                     >
@@ -230,17 +350,70 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
           ) : (
             <></>
           )}
-
-          {/*<Card bg="gray.0" radius="lg" mt="xl" p="lg">*/}
-          {/*  <Title order={4}>Your Votes</Title>*/}
-          {/*  <Text mt="4">*/}
-          {/*    You have voted 4 times for the project and earned 4 BitXP as well*/}
-          {/*    as 4 Project Alpha XP.*/}
-          {/*  </Text>*/}
-          {/*</Card>*/}
         </Card>
       </Container>
-
+      <Center>
+        {myRank ? `You are ranked ${getRankEmoji(Number(myRank))},` : 'Your'} vote total:{' '}
+        {myVoteCount === '-' ? myVoteCount : Intl.NumberFormat('en-us').format(Number(myVoteCount))}
+      </Center>
+      <Container size="sm" py="xl">
+        <Card mt="sm" radius="lg" withBorder>
+          <Flex direction="column">
+            <Title order={3} ta="center" mb="md">
+              Voter List - <b>{voters.length}</b> have voted!
+            </Title>
+            <Table>
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Ranking</Table.Th>
+                  <Table.Th>Address</Table.Th>
+                  <Table.Th ta="right">Votes</Table.Th>
+                  {/* TODO: count the votes person num. */}
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {initVoteDataFinish && voters.length ? (
+                  voters.slice(page * 10, (page + 1) * 10).map((voter, index) => (
+                    <Table.Tr key={voter.address}>
+                      <Table.Td>{getRankEmoji(page * 10 + index)}</Table.Td>
+                      <Table.Td>
+                        <Tooltip label={new RoochAddress(voter.address).toStr()} withArrow>
+                          <span>
+                            {new RoochAddress(voter.address).toShortStr({
+                              start: 40,
+                              end: 6,
+                            })}
+                            {voter.address === roochAddressHex && ' 👤'}
+                          </span>
+                        </Tooltip>
+                      </Table.Td>
+                      <Table.Td ta="right">
+                        {Intl.NumberFormat('en-us').format(voter.value)}
+                      </Table.Td>
+                    </Table.Tr>
+                  ))
+                ) : (
+                  <Table.Tr>
+                    <Table.Td>-</Table.Td>
+                    <Table.Td>-</Table.Td>
+                    <Table.Td ta="right">-</Table.Td>
+                  </Table.Tr>
+                )}
+              </Table.Tbody>
+            </Table>
+            <hr style={{ margin: '20px 0', border: '1px solid #e0e0e0' }} />
+            <Center>
+              <Pagination
+                boundaries={3}
+                onChange={(v) => {
+                  setPage(v - 1)
+                }}
+                total={Math.ceil(voters.length / 10)}
+              />
+            </Center>
+          </Flex>
+        </Card>
+      </Container>
       <Footer />
     </>
   )
