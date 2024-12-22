@@ -40,6 +40,9 @@ import { useNetworkVariable } from '@/app/networks'
 import { formatNumber } from '@/utils/number'
 import Markdown from 'react-markdown'
 import toast from 'react-hot-toast'
+
+import 'github-markdown-css'
+
 const getRankEmoji = (index: number) => {
   switch (index) {
     case 0:
@@ -236,10 +239,49 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
               <Text c="gray.7">{project.oneLiner}</Text>
             </Box>
           </Group>
-
           <Box mt="lg">
-            <Title order={3}>About the Project</Title>
-            <Markdown>{project.description}</Markdown>
+            <Markdown
+              className="markdown-body"
+              components={{
+                p: ({ children }) => (
+                  <Text mt="xs" mb="xs">
+                    {children}
+                  </Text>
+                ),
+                h1: ({ children }) => (
+                  <Title order={1} mt="lg" mb="md">
+                    {children}
+                  </Title>
+                ),
+                h2: ({ children }) => (
+                  <Title order={2} mt="lg" mb="md">
+                    {children}
+                  </Title>
+                ),
+                h3: ({ children }) => (
+                  <Title order={3} mt="lg" mb="md">
+                    {children}
+                  </Title>
+                ),
+                ul: ({ children }) => (
+                  <Box component="ul" ml="md" mt="xs" mb="xs">
+                    {children}
+                  </Box>
+                ),
+                li: ({ children }) => (
+                  <Text component="li" mt="xs">
+                    {children}
+                  </Text>
+                ),
+                a: ({ href, children }) => (
+                  <Anchor href={href} target="_blank" rel="noopener noreferrer">
+                    {children}
+                  </Anchor>
+                ),
+              }}
+            >
+              {project.description}
+            </Markdown>
           </Box>
 
           <Box mt="lg">
