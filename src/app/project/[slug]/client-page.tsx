@@ -67,7 +67,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   const moduleName = `${contractAddr}::grow_information_${contractVersion}`
   const [loading, setLoading] = useState(false)
   const [myVoteCount, setMyVoteCount] = useState('-')
-  const [myRank, setMyRank] = useState<Number>()
+  const [myRank, setMyRank] = useState<number>()
   const projectListObj = Args.object({
     address: contractAddr,
     module: `grow_information_${contractVersion}`,
@@ -137,7 +137,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
             })
         }
       })
-  }, [addr, data])
+  }, [addr, data, client, contractVersion, contractAddr])
 
   useEffect(() => {
     if (!data || data.vm_status !== 'Executed') {
@@ -155,7 +155,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
     ] as AnnotatedMoveStructView
     const tableHandle = (_voteDetail.value.handle as AnnotatedMoveStructView).value['id'] as string
     getAllVoters(tableHandle)
-  }, [data, client, contractAddr, initVoteData, setInitVoteData])
+  }, [data, initVoteData, setInitVoteData])
 
   useEffect(() => {
     if (!roochAddressHex || !initVoteDataFinish) {
@@ -353,7 +353,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
         </Card>
       </Container>
       <Center>
-        {myRank ? `You are ranked ${getRankEmoji(Number(myRank))},` : 'Your'} vote total:{' '}
+        {myRank ? `You are ranked ${getRankEmoji(myRank)},` : 'Your'} vote total:{' '}
         {myVoteCount === '-' ? myVoteCount : Intl.NumberFormat('en-us').format(Number(myVoteCount))}
       </Center>
       <Container size="sm" py="xl">
