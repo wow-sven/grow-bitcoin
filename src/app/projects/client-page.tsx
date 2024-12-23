@@ -377,7 +377,7 @@ export default function ClientProjectsPage({
                     }}
                   >
                     Bringing BTC power to broader SocialFi ecosystem by voting for UXLink and get
-                    UXUY XP.
+                    UXUY.
                   </Text>
                 </Stack>
                 <Stack style={{ width: '30%' }}>
