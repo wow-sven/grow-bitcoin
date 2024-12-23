@@ -38,6 +38,8 @@ export default async function ProjectDetail({ params }: { params: { slug: string
     avatar: getAvatar(fields),
     github: 'Github' in fields ? fields.Github : null,
   }
+  // airtable escape
+  project.description = project.description.replace(/\\([*_~`{}\[\]()#+\-.!])/g, '$1')
 
   return <ClientProjectDetailPage project={project} />
 }
