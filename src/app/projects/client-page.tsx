@@ -23,7 +23,7 @@ import {
 import Link from 'next/link'
 import NavigationBar from '@/components/NavigationBar'
 import Footer from '@/components/Footer'
-
+import { useCountDown } from 'ahooks'
 import { IconSearch, IconThumbUp, IconChevronDown } from '@tabler/icons-react'
 import {
   SessionKeyGuard,
@@ -37,6 +37,7 @@ import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/type
 import { Args, Transaction } from '@roochnetwork/rooch-sdk'
 import { CreateSessionModal } from '@/components/session-model'
 import { formatNumber } from '@/utils/number'
+import router from 'next/router'
 
 function ProjectCard({
   project,
@@ -290,6 +291,12 @@ export default function ClientProjectsPage({
     [selectedTags, tags],
   )
 
+  const [_countdown, formattedRes] = useCountDown({
+    targetDate: 1736078400000,
+  })
+
+  const { days, hours, minutes, seconds } = formattedRes
+
   return (
     <>
       <NavigationBar />
@@ -325,6 +332,64 @@ export default function ClientProjectsPage({
               </Flex>
               {mobileTocExpanded && FilterCheckboxGroup}
             </Box>
+
+            <Button
+              component={Link}
+              href="/project/uxlink"
+              style={{
+                width: '100%',
+                height: 'fit-content',
+                position: 'relative',
+                borderRadius: '12px',
+                background: 'url(./banner.svg)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                marginBottom: '16px',
+                textAlign: 'left',
+              }}
+            >
+              <Stack
+                style={{
+                  padding: '16px',
+                  display: 'flex',
+                  flexDirection: 'row',
+                }}
+              >
+                <Stack style={{ width: '60%' }}>
+                  <Text
+                    style={{
+                      color: '#22AB38',
+                      fontSize: '2rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    UXLink Special Campaign ends in
+                  </Text>
+                  <Text
+                    style={{
+                      color: '#99CD87',
+                      fontSize: '1rem',
+                      marginTop: '4px',
+                      fontWeight: 600,
+                      width: '100%',
+                      textWrap: 'wrap',
+                    }}
+                  >
+                    Bringing BTC power to broader SocialFi ecosystem by voting for UXLink and get
+                    UXUY XP.
+                  </Text>
+                </Stack>
+                <Stack style={{ width: '30%' }}>
+                  <Text style={{ color: '#fff', fontSize: '2.05rem', fontWeight: 600 }}>
+                    {days}d {hours}h {minutes}m {seconds} s
+                  </Text>
+                </Stack>
+                <Stack justify="center">
+                  <Image src="./logo.svg" alt="logo" width={80} height={80} />
+                </Stack>
+              </Stack>
+            </Button>
 
             <Flex gap="md" direction={{ base: 'column', xs: 'row' }}>
               <Input
