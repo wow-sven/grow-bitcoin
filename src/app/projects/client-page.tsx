@@ -48,7 +48,10 @@ function ProjectCard({
   contractProject?: ContractProjectType
   adminId: string
 }) {
-  console.log(project)
+  if (project.slug === 'apro-oracle') {
+    console.log(project)
+    console.log(contractProject)
+  }
   const client = useRoochClient()
   const contractAddr = useNetworkVariable('contractAddr')
   const contractVersion = useNetworkVariable('contractVersion')
@@ -177,12 +180,6 @@ export default function ClientProjectsPage({
     },
   })
 
-  const tx = new Transaction()
-  tx.callFunction({
-    target: '',
-    function: '',
-  })
-
   useEffect(() => {
     if (project_table && project_table.data.length > 0) {
       const view = project_table.data[0].decoded_value!.value
@@ -196,6 +193,7 @@ export default function ClientProjectsPage({
           stateOption: {
             decode: true,
           },
+          limit: '100',
         })
         .then((_contractProjects) => {
           const newContractProjects = new Map()
