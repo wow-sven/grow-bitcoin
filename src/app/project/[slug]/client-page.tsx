@@ -17,7 +17,6 @@ import {
   Table,
   Text,
   Title,
-  Tooltip,
   Pagination,
   Select,
 } from '@mantine/core'
@@ -25,7 +24,7 @@ import Link from 'next/link'
 import NavigationBar from '@/components/NavigationBar'
 import Footer from '@/components/Footer'
 
-import { IconChevronLeft, IconThumbUp, IconExternalLink } from '@tabler/icons-react'
+import { IconChevronLeft, IconThumbUp, IconExternalLink, IconBrandX } from '@tabler/icons-react'
 import {
   SessionKeyGuard,
   useCurrentAddress,
@@ -33,7 +32,15 @@ import {
   useRoochClient,
   useRoochClientQuery,
 } from '@roochnetwork/rooch-sdk-kit'
-import { Args, RoochAddress, Transaction } from '@roochnetwork/rooch-sdk'
+import {
+  Args,
+  BitcoinAddress,
+  BitcoinNetowkType,
+  fromHEX,
+  RoochAddress,
+  toShortStr,
+  Transaction,
+} from '@roochnetwork/rooch-sdk'
 import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/types/generated'
 import { useEffect, useMemo, useState } from 'react'
 import { getTokenInfo } from '@/app/stake/util'
@@ -63,7 +70,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
   const [initVoteData, setInitVoteData] = useState(false)
   const [initVoteDataFinish, setInitVoteDataFinish] = useState(false)
   const [page, setPage] = useState(0)
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(100)
   const [balance, setBalance] = useState(-1)
   const [amount, setAmount] = useState('1')
   const [voters, setVoters] = useState<Array<VoterInfo>>([])
@@ -204,7 +211,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
         decode: true,
       },
       cursor,
-      limit: '100',
+      limit: '200',
     })
 
     const items = result.data.map((item) => {
@@ -212,6 +219,40 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
       return {
         address: view.name.toString(),
         value: Number(view.value),
+      }
+    })
+
+    const resultAddressMap = await client.executeViewFunction({
+      target: '0x3::address_mapping::resolve_bitcoin_batch',
+      args: [
+        Args.vec(
+          'address',
+          items.map((item) => item.address),
+        ),
+      ],
+    })
+
+    const resultXMap = await client.executeViewFunction({
+      target: `${contractAddr}::twitter_account::resolve_author_id_by_address_batch`,
+      args: [
+        Args.vec(
+          'address',
+          items.map((item) => item.address),
+        ),
+      ],
+    })
+
+    const decode = new TextDecoder('utf-8')
+    const warpItems = items.map((item, i) => {
+      const tmp = (resultAddressMap.return_values![0].decoded_value as any).value[i][0]
+      const btcAddress = new BitcoinAddress(tmp, BitcoinNetowkType.Bitcoin).toStr()
+      const x = (resultXMap.return_values![0].decoded_value as any).value[i][0]
+      const decodeX = x === '0x0' ? '' : decode.decode(fromHEX(x))
+      return {
+        ...item,
+        btcAddress,
+        x: decodeX,
+        roochAddress: new RoochAddress(item.address).toBech32Address(),
       }
     })
 
@@ -228,7 +269,7 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
       })
 
       // Then add new items if they haven't been seen
-      items.forEach((voter) => {
+      warpItems.forEach((voter) => {
         if (!seenAddresses.has(voter.address)) {
           seenAddresses.add(voter.address)
           uniqueVoters.push(voter)
@@ -447,17 +488,59 @@ export default function ProjectDetail({ project }: { project: ProjectDetail }) {
                   voters.slice(page * pageSize, (page + 1) * pageSize).map((voter, index) => (
                     <Table.Tr key={voter.address}>
                       <Table.Td>{getRankEmoji(page * pageSize + index)}</Table.Td>
-                      <Table.Td>
-                        <Tooltip label={new RoochAddress(voter.address).toStr()} withArrow>
-                          <span>
-                            {new RoochAddress(voter.address).toShortStr({
-                              start: 40,
-                              end: 6,
-                            })}
+                      <Table.Td
+                        style={{
+                          padding: '12px',
+                          borderBottom: '1px solid #e0e0e0',
+                          textAlign: 'left',
+                        }}
+                      >
+                        <a
+                          href={`https://roochscan.io/account/${voter.btcAddress}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            textDecoration: 'none',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <span
+                            style={{
+                              fontSize: '14px',
+                              color: '#333',
+                              textDecoration: 'none',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = '#ff9909')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = '#333')}
+                          >
+                            {toShortStr(voter.btcAddress, { start: 36, end: 6 })}
                             {voter.address === roochAddressHex && ' 👤'}
                           </span>
-                        </Tooltip>
+                        </a>
+                        {voter.x !== '' && (
+                          <Anchor
+                            c="dark"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            href={`https://twitter.com/i/user/${voter.x}`}
+                            style={{
+                              marginLeft: '8px',
+                              verticalAlign: 'middle',
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.color = '#0d8af0')}
+                            onMouseLeave={(e) => (e.currentTarget.style.color = 'black')}
+                          >
+                            <IconBrandX size={20} />
+                          </Anchor>
+                        )}
                       </Table.Td>
+
                       <Table.Td ta="right">
                         <Text style={{ fontVariantNumeric: 'tabular-nums' }}>
                           {Intl.NumberFormat('en-us').format(voter.value)}
