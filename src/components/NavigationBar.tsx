@@ -75,6 +75,15 @@ function DesktopNavigationBar({ style }: { style?: any }) {
           >
             Submit Project
           </Anchor>
+          <Anchor
+            component={Link}
+            href="/register"
+            c="dark"
+            underline="never"
+            fw={pathname === '/register' ? '500' : '400'}
+          >
+            Grow Registration
+          </Anchor>
           <div style={{ marginLeft: 'auto' }}>
             <ConnectButton />
           </div>
