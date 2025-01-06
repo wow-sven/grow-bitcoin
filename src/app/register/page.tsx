@@ -173,9 +173,6 @@ export default function Register() {
       })
   }
 
-  console.log(registration)
-  console.log(register)
-
   return (
     <>
       <NavigationBar />
