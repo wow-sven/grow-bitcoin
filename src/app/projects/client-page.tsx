@@ -37,7 +37,6 @@ import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/type
 import { Args, Transaction } from '@roochnetwork/rooch-sdk'
 import { CreateSessionModal } from '@/components/session-model'
 import { formatNumber } from '@/utils/number'
-import router from 'next/router'
 
 function ProjectCard({
   project,
@@ -290,7 +289,7 @@ export default function ClientProjectsPage({
   )
 
   const [_countdown, formattedRes] = useCountDown({
-    targetDate: 1736078400000,
+    targetDate: 1736337600000,
   })
 
   const { days, hours, minutes, seconds } = formattedRes
@@ -333,7 +332,7 @@ export default function ClientProjectsPage({
 
             <Button
               component={Link}
-              href="/project/uxlink"
+              href="/register"
               style={{
                 width: '100%',
                 height: 'fit-content',
@@ -362,7 +361,7 @@ export default function ClientProjectsPage({
                       fontWeight: 600,
                     }}
                   >
-                    UXLink Special Campaign ends in
+                    UXLink Register ends in
                   </Text>
                   <Text
                     style={{
