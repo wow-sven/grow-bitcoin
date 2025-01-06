@@ -14,7 +14,7 @@ import {
 import { snapshoot } from '@/app/constant'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNetworkVariable } from '@/app/networks'
-import { Args, Transaction } from '@roochnetwork/rooch-sdk'
+import { Args, fromHEX, Transaction } from '@roochnetwork/rooch-sdk'
 import toast from 'react-hot-toast'
 
 // tmp info
@@ -46,7 +46,7 @@ export default function Register() {
   const [index, setIndex] = useState(-2)
   const [recipient, setRecipient] = useState('')
   const [timeRemaining, setTimeRemaining] = useState(-1)
-  const [register, setRegister] = useState(false)
+  const [registerRecipient, setRegisterRecipient] = useState('')
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -80,7 +80,11 @@ export default function Register() {
     })
 
     if (registerResult.vm_status === 'Executed') {
-      setRegister(!(registerResult.return_values![0].value.value === '0x00'))
+      const addr = registerResult.return_values![0].value.value
+      if (addr !== '0x00') {
+        const bytes = fromHEX(addr)
+        setRegisterRecipient(new TextDecoder('utf8').decode(bytes))
+      }
     }
 
     let index = snapshoot.findIndex(
@@ -133,7 +137,7 @@ export default function Register() {
   const handleSubmit = async () => {
     const tx = new Transaction()
 
-    if (register) {
+    if (registerRecipient !== '') {
       tx.callFunction({
         target: `${contractAddr}::grow_registration::update_register_info`,
         args: [Args.objectId(UXLINK_ID), Args.string(recipient)],
@@ -163,7 +167,7 @@ export default function Register() {
       .then((result) => {
         if (result.execution_info.status.type === 'executed') {
           toast.success('register success')
-          setRegister(true)
+          setRegisterRecipient(recipient)
         } else {
           toast.error(result.error_info?.vm_error_info.error_message || 'unknown error')
         }
@@ -216,14 +220,18 @@ export default function Register() {
             <Flex mt="10" gap="md" direction={{ base: 'column', xs: 'row' }}>
               <Input
                 flex={1}
-                placeholder="Please enter the address to receive the UXLink airdrop (EVM or TON)"
+                placeholder={
+                  registerRecipient
+                    ? registerRecipient
+                    : 'Please enter the address to receive the UXLink airdrop (EVM or TON)'
+                }
                 radius="md"
                 value={recipient}
                 onChange={(e) => setRecipient(e.currentTarget.value)}
               />
               <SessionKeyGuard onClick={handleSubmit}>
                 <Button radius="md" loading={isPending} disabled={recipient === ''}>
-                  {register ? 'update' : 'Submit'}
+                  {registerRecipient ? 'update' : 'Submit'}
                 </Button>
               </SessionKeyGuard>
             </Flex>
