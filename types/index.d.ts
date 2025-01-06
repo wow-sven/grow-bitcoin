@@ -44,4 +44,6 @@ interface ContractProjectType {
 type VoterInfo = {
   address: string
   value: number
+  x: string
+  btcAddress: string
 }
