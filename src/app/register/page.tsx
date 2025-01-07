@@ -217,7 +217,7 @@ export default function Register() {
             </Title>
           </Box>
           <Flex direction={'row'}>
-            <Text color="red">Note: Your receiving address needs to interact with  </Text>
+            <Text color="red">Note: Your receiving address needs to interact with </Text>
             <a
               href="https://dapp.uxlink.io/season2"
               target="_blank"
