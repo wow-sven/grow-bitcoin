@@ -14,7 +14,7 @@ import {
 import { snapshoot } from '@/app/constant'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useNetworkVariable } from '@/app/networks'
-import { Args, fromHEX, Transaction } from '@roochnetwork/rooch-sdk'
+import { Args, Transaction } from '@roochnetwork/rooch-sdk'
 import toast from 'react-hot-toast'
 
 // tmp info
@@ -82,8 +82,7 @@ export default function Register() {
     if (registerResult.vm_status === 'Executed') {
       const addr = registerResult.return_values![0].value.value
       if (addr !== '0x00') {
-        const bytes = fromHEX(addr)
-        setRegisterRecipient(new TextDecoder('utf8').decode(bytes))
+        setRegisterRecipient(registerResult.return_values![0].decoded_value as string)
       }
     }
 
