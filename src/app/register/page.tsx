@@ -216,6 +216,23 @@ export default function Register() {
               {curAddress && index > 0 && 'Congratulations! You are eligible for the airdrop.'}
             </Title>
           </Box>
+          <Flex direction={'row'}>
+            <Text color="red">Note: Your receiving address needs to interact with  </Text>
+            <a
+              href="https://dapp.uxlink.io/season2"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                marginLeft: 3,
+                textDecoration: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                color: 'ff9909',
+              }}
+            >
+              UXLink
+            </a>
+          </Flex>
           {index > 0 && (
             <Flex mt="10" gap="md" direction={{ base: 'column', xs: 'row' }}>
               <Input
