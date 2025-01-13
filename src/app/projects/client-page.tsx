@@ -330,7 +330,6 @@ export default function ClientProjectsPage({
               </Flex>
               {mobileTocExpanded && FilterCheckboxGroup}
             </Box>
-
             <Button
               component={Link}
               href="/project/Yescoin"
@@ -393,7 +392,6 @@ export default function ClientProjectsPage({
                 </Stack>
               </Stack>
             </Button>
-
             <Flex gap="md" direction={{ base: 'column', xs: 'row' }}>
               <Input
                 flex={1}
