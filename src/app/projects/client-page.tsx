@@ -37,7 +37,7 @@ import { AnnotatedMoveStructView } from '@roochnetwork/rooch-sdk/src/client/type
 import { Args, Transaction } from '@roochnetwork/rooch-sdk'
 import { CreateSessionModal } from '@/components/session-model'
 import { formatNumber } from '@/utils/number'
-import router from 'next/router'
+// import router from 'next/router'
 
 function ProjectCard({
   project,
@@ -290,7 +290,7 @@ export default function ClientProjectsPage({
   )
 
   const [_countdown, formattedRes] = useCountDown({
-    targetDate: 1736078400000,
+    targetDate: 1737964800000,
   })
 
   const { days, hours, minutes, seconds } = formattedRes
@@ -333,7 +333,7 @@ export default function ClientProjectsPage({
 
             <Button
               component={Link}
-              href="/project/uxlink"
+              href="/project/Yescoin"
               style={{
                 width: '100%',
                 height: 'fit-content',
@@ -362,7 +362,7 @@ export default function ClientProjectsPage({
                       fontWeight: 600,
                     }}
                   >
-                    UXLink Special Campaign ends in
+                    Yescoin Special Campaign ends in
                   </Text>
                   <Text
                     style={{
@@ -374,8 +374,8 @@ export default function ClientProjectsPage({
                       textWrap: 'wrap',
                     }}
                   >
-                    Bringing BTC power to broader SocialFi ecosystem by voting for UXLink and get
-                    UXUY.
+                    Bringing BTC power to broader SocialFi ecosystem by voting for Yescoin and get
+                    Yescoin XP.
                   </Text>
                 </Stack>
                 <Stack style={{ width: '30%' }}>
@@ -384,7 +384,12 @@ export default function ClientProjectsPage({
                   </Text>
                 </Stack>
                 <Stack justify="center">
-                  <Image src="./logo.svg" alt="logo" width={80} height={80} />
+                  <Image
+                    src="https://unavatar.io/x/Yescoin_Fam"
+                    alt="logo"
+                    width={80}
+                    height={80}
+                  />
                 </Stack>
               </Stack>
             </Button>
