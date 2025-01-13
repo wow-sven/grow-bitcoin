@@ -290,7 +290,7 @@ export default function ClientProjectsPage({
   )
 
   const [_countdown, formattedRes] = useCountDown({
-    targetDate: 1737964800000,
+    targetDate: 1737979200000,
   })
 
   const { days, hours, minutes, seconds } = formattedRes
