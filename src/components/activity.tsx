@@ -16,6 +16,14 @@ const ActivitiesData = [
     endTime: 1737979200000,
     icon: './yescoin_logo.svg',
   },
+  {
+    name: 'Group',
+    title: 'Group Special Campaign ends in',
+    description:
+      'Bring the power of BTC to virtual worlds and the AI ecosystem by voting for WORLD3 and earning Lumens.',
+    endTime: 1740038400000,
+    icon: './group_logo.svg',
+  },
 ]
 
 interface ItemProps {
