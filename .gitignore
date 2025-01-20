@@ -42,4 +42,3 @@ sdk/typescript/src/generated/
 .pnpm-store/
 .env.local
 .DS_Store
-pnpm-lock.yaml
